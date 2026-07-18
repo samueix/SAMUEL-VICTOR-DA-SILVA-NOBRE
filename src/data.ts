@@ -3,14 +3,14 @@ import { Experience, Skill, Certification, Education, Project } from './types';
 export const personalInfo = {
   fullName: 'Samuel Victor da Silva Nobre',
   shortName: 'Samuel Victor',
-  title: 'Analista de Operações de TI',
+  title: 'IT Consultant',
   subtitle: 'Suporte Técnico, Redes & Infraestrutura',
   email: 'samuca.victor135@gmail.com',
   phone: '(85) 98511-0225',
   whatsappUrl: 'https://wa.me/5585985110225',
   linkedinUrl: 'https://www.linkedin.com/in/samuelnobree/',
   githubUrl: '#', 
-  location: 'Fortaleza – CE',
+  location: 'Fortaleza e Região – CE',
   cnh: 'A & B (Possui moto própria)',
   availability: 'Disponibilidade total para início imediato (Presencial, Híbrido ou Remoto)',
   english: 'Inglês Técnico (Leitura de documentação técnica, manuais e pesquisa de soluções)',
@@ -67,7 +67,7 @@ export const experiences: Experience[] = [
     role: 'Suporte Técnico e Redes (Freelancer)',
     company: 'Solved It',
     period: 'Março de 2023 – Presente',
-    location: 'Maracanaú, CE (Remoto / Presencial)',
+    location: 'Fortaleza e Região – CE (Presencial / Híbrido)',
     description: [
       'Desenho e execução de projetos de infraestrutura de redes locais (LAN) e redes Wi-Fi de alta densidade para PMEs.',
       'Instalação de cabeamento estruturado Cat5e/Cat6: conectorização, identificação física, organização de racks e fusões simples.',
@@ -139,6 +139,11 @@ export const skills: Skill[] = [
 ];
 
 export const projects: Project[] = [
+  {
+    title: 'Cabeamento e Rede Estruturada do Posto de Gasolina J e L',
+    description: 'Projeto e execução da infraestrutura de redes do Posto de Gasolina J e L, contemplando a conectorização e passagem de cabeamento Cat6, organização de rack principal, instalação de Wi-Fi corporativo de alta performance e montagem de canais de passagem metálicos, garantindo máxima imunidade a ruídos para os sistemas de bombas e computadores de PDV.',
+    techStack: ['Cabeamento Estruturado', 'Redes de Computadores', 'Wi-Fi Corporativo', 'Infraestrutura']
+  },
   {
     title: 'Sistema de Monitoramento de CTO em Python',
     description: 'Aplicação desenvolvida para otimizar o monitoramento técnico de caixas de terminação óptica (CTO), garantindo rápida identificação de quedas de potência e incidentes em tempo hábil.',

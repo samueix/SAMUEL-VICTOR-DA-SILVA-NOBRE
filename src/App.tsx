@@ -53,12 +53,16 @@ export default function App() {
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
-        // If they have the old bio or missing languages/tools, or old linkedin, update it so they see the fresh content!
+        // If they have the old bio, old title, old location or missing languages/tools, or old linkedin, update it so they see the fresh content!
         const hasOldLinkedin = parsed.linkedinUrl && parsed.linkedinUrl.includes('samuel-nobre-40a220186');
-        if (!parsed.languages || !parsed.tools || parsed.bio.includes('dedicado e motivado') || hasOldLinkedin) {
+        const hasOldTitle = parsed.title === 'Analista de Operações de TI';
+        const hasOldLocation = parsed.location === 'Fortaleza – CE';
+        if (!parsed.languages || !parsed.tools || parsed.bio.includes('dedicado e motivado') || hasOldLinkedin || hasOldTitle || hasOldLocation) {
           const migrated = { 
             ...defaultPersonalInfo, 
             ...parsed, 
+            title: defaultPersonalInfo.title,
+            location: defaultPersonalInfo.location,
             bio: defaultPersonalInfo.bio, 
             languages: defaultPersonalInfo.languages, 
             tools: defaultPersonalInfo.tools, 
@@ -80,7 +84,19 @@ export default function App() {
     const stored = localStorage.getItem('experiences');
     if (stored) {
       try {
-        return JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        const hasOldFreelancerLocation = parsed.some((e: any) => e.id === 'exp-3' && e.location.includes('Maracanaú'));
+        if (hasOldFreelancerLocation) {
+          const migrated = parsed.map((e: any) => {
+            if (e.id === 'exp-3') {
+              return { ...e, location: 'Fortaleza e Região – CE (Presencial / Híbrido)' };
+            }
+            return e;
+          });
+          localStorage.setItem('experiences', JSON.stringify(migrated));
+          return migrated;
+        }
+        return parsed;
       } catch (e) {
         console.error('Error parsing experiences from localStorage:', e);
       }
@@ -112,7 +128,17 @@ export default function App() {
     const stored = localStorage.getItem('projects');
     if (stored) {
       try {
-        return JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        const hasGasStationProject = parsed.some((p: any) => p.title.includes('Posto de Gasolina J e L'));
+        if (!hasGasStationProject) {
+          const gasStationProject = defaultProjects.find(p => p.title.includes('Posto de Gasolina J e L'));
+          if (gasStationProject) {
+            const migrated = [gasStationProject, ...parsed];
+            localStorage.setItem('projects', JSON.stringify(migrated));
+            return migrated;
+          }
+        }
+        return parsed;
       } catch (e) {
         console.error('Error parsing projects from localStorage:', e);
       }

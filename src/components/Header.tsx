@@ -64,18 +64,28 @@ export default function Header({ activeSection, setActiveSection, isPrintMode, s
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
         {/* Logo */}
-        <button 
-          onClick={() => handleNavClick('inicio')}
-          className="flex items-center gap-2.5 text-white font-bold text-lg tracking-tight hover:opacity-90 transition-opacity focus:outline-none cursor-pointer"
-        >
-          <div className="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center shadow-md">
-            <span className="text-white font-extrabold text-xs">SV</span>
-          </div>
-          <div className="text-left leading-none">
+        <div className="flex items-center gap-2.5">
+          {onAdminClick ? (
+            <button 
+              onClick={onAdminClick}
+              title="Acesso Restrito"
+              className="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center shadow-md hover:border-blue-500/50 hover:bg-slate-950 transition-all cursor-pointer group focus:outline-none"
+            >
+              <span className="text-white font-extrabold text-xs group-hover:text-blue-400 transition-colors">SV</span>
+            </button>
+          ) : (
+            <div className="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center shadow-md">
+              <span className="text-white font-extrabold text-xs">SV</span>
+            </div>
+          )}
+          <button 
+            onClick={() => handleNavClick('inicio')}
+            className="text-left leading-none hover:opacity-90 transition-opacity focus:outline-none cursor-pointer"
+          >
             <span className="block text-sm font-black text-white">Samuel Victor</span>
-            <span className="block text-[10px] font-bold text-blue-400 tracking-wider uppercase mt-0.5">Operações de TI</span>
-          </div>
-        </button>
+            <span className="block text-[10px] font-bold text-blue-400 tracking-wider uppercase mt-0.5">IT Consultant</span>
+          </button>
+        </div>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-1">
@@ -104,30 +114,10 @@ export default function Header({ activeSection, setActiveSection, isPrintMode, s
             <FileText className="w-4 h-4" />
             {isPrintMode ? 'Visualizar Site' : 'Modo Impressão'}
           </button>
-
-          {onAdminClick && (
-            <button
-              onClick={onAdminClick}
-              className="ml-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 rounded-lg text-sm font-semibold flex items-center gap-1.5 border border-slate-800 shadow-sm transition-all cursor-pointer"
-            >
-              <Settings className="w-4 h-4 text-slate-400" />
-              Painel ADM
-            </button>
-          )}
         </nav>
 
         {/* Mobile menu toggle & print mode button */}
         <div className="flex items-center gap-2 md:hidden">
-          {onAdminClick && (
-            <button
-              onClick={onAdminClick}
-              className="p-2 bg-slate-900 border border-slate-800 text-slate-300 hover:text-white rounded-lg shadow-sm cursor-pointer"
-              title="Painel Administrador"
-            >
-              <Settings className="w-5 h-5" />
-            </button>
-          )}
-          
           <button
             onClick={() => setIsPrintMode(!isPrintMode)}
             className={`p-2 rounded-lg transition-colors cursor-pointer ${
@@ -163,18 +153,6 @@ export default function Header({ activeSection, setActiveSection, isPrintMode, s
               {item.label}
             </button>
           ))}
-          {onAdminClick && (
-            <button
-              onClick={() => {
-                setIsMenuOpen(false);
-                onAdminClick();
-              }}
-              className="w-full text-left px-4 py-3 text-blue-400 hover:bg-blue-500/10 rounded-lg text-sm font-bold flex items-center gap-2 transition-all cursor-pointer"
-            >
-              <Settings className="w-4 h-4" />
-              Painel ADM
-            </button>
-          )}
         </div>
       )}
     </header>

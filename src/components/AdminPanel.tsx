@@ -56,7 +56,7 @@ export default function AdminPanel({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState(false);
-  const [activeTab, setActiveTab] = useState<'dados' | 'experiencias' | 'habilidades' | 'educacao' | 'certificacoes' | 'mensagens' | 'cartas'>('dados');
+  const [activeTab, setActiveTab] = useState<'dados' | 'experiencias' | 'habilidades' | 'educacao' | 'certificacoes' | 'cartas'>('dados');
   
   // States for sub-form editors
   const [editingExp, setEditingExp] = useState<Experience | null>(null);
@@ -242,7 +242,51 @@ export default function AdminPanel({
   // Screen 1: Unauthenticated Password Check
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#0B0F19] flex items-center justify-center p-4 admin-dark-theme">
+        <style>{`
+          .admin-dark-theme {
+            background-color: #0B0F19 !important;
+            color: #cbd5e1 !important;
+          }
+          .admin-dark-theme .bg-slate-50,
+          .admin-dark-theme .bg-white {
+            background-color: #0f172a !important; /* bg-slate-900 */
+            border-color: #1e293b !important; /* border-slate-800 */
+            color: #cbd5e1 !important;
+          }
+          .admin-dark-theme .text-slate-900,
+          .admin-dark-theme .text-slate-800,
+          .admin-dark-theme .text-slate-700 {
+            color: #f8fafc !important; /* text-slate-50 */
+          }
+          .admin-dark-theme .text-slate-650 {
+            color: #94a3b8 !important;
+          }
+          .admin-dark-theme .text-slate-500,
+          .admin-dark-theme .text-slate-400 {
+            color: #94a3b8 !important; /* text-slate-400 */
+          }
+          .admin-dark-theme input,
+          .admin-dark-theme textarea,
+          .admin-dark-theme select {
+            background-color: #020617 !important; /* bg-slate-950 */
+            border-color: #1e293b !important;
+            color: #ffffff !important;
+          }
+          .admin-dark-theme input:focus,
+          .admin-dark-theme textarea:focus,
+          .admin-dark-theme select:focus {
+            border-color: #3b82f6 !important;
+          }
+          .admin-dark-theme .hover\:bg-slate-100:hover,
+          .admin-dark-theme .hover\:bg-slate-50:hover {
+            background-color: #1e293b !important;
+          }
+          .admin-dark-theme .border-slate-100,
+          .admin-dark-theme .border-slate-200 {
+            border-color: #1e293b !important;
+          }
+        `}</style>
         <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl shadow-lg p-6 sm:p-8 relative">
           <button 
             onClick={onClose}
@@ -303,7 +347,51 @@ export default function AdminPanel({
 
   // Screen 2: Authenticated Dashboard
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans pb-24">
+    <div className="min-h-screen bg-[#0B0F19] text-slate-200 font-sans pb-24 admin-dark-theme">
+      <style>{`
+        .admin-dark-theme {
+          background-color: #0B0F19 !important;
+          color: #cbd5e1 !important;
+        }
+        .admin-dark-theme .bg-slate-50,
+        .admin-dark-theme .bg-white {
+          background-color: #0f172a !important; /* bg-slate-900 */
+          border-color: #1e293b !important; /* border-slate-800 */
+          color: #cbd5e1 !important;
+        }
+        .admin-dark-theme .text-slate-900,
+        .admin-dark-theme .text-slate-800,
+        .admin-dark-theme .text-slate-700 {
+          color: #f8fafc !important; /* text-slate-50 */
+        }
+        .admin-dark-theme .text-slate-650 {
+          color: #94a3b8 !important;
+        }
+        .admin-dark-theme .text-slate-500,
+        .admin-dark-theme .text-slate-400 {
+          color: #94a3b8 !important; /* text-slate-400 */
+        }
+        .admin-dark-theme input,
+        .admin-dark-theme textarea,
+        .admin-dark-theme select {
+          background-color: #020617 !important; /* bg-slate-950 */
+          border-color: #1e293b !important;
+          color: #ffffff !important;
+        }
+        .admin-dark-theme input:focus,
+        .admin-dark-theme textarea:focus,
+        .admin-dark-theme select:focus {
+          border-color: #3b82f6 !important;
+        }
+        .admin-dark-theme .hover\:bg-slate-100:hover,
+        .admin-dark-theme .hover\:bg-slate-50:hover {
+          background-color: #1e293b !important;
+        }
+        .admin-dark-theme .border-slate-100,
+        .admin-dark-theme .border-slate-200 {
+          border-color: #1e293b !important;
+        }
+      `}</style>
       {/* Admin Subheader Top-bar */}
       <div className="bg-slate-900 text-white py-3.5 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
@@ -331,38 +419,32 @@ export default function AdminPanel({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         
         {/* Statistics & Overview Section */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
-          <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
-            <span className="text-xs text-slate-500 font-semibold block">Propostas / Mensagens</span>
-            <span className="text-2xl font-black text-slate-900 mt-1 block flex items-center gap-1.5">
-              <MessageSquare className="w-5 h-5 text-emerald-600" />
-              {savedMessages.length}
-            </span>
-          </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
             <span className="text-xs text-slate-500 font-semibold block">Experiências</span>
             <span className="text-2xl font-black text-slate-900 mt-1 block flex items-center gap-1.5">
-              <Briefcase className="w-5 h-5 text-blue-600" />
+              <Briefcase className="w-5 h-5 text-blue-500" />
               {experiences.length}
             </span>
           </div>
           <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
             <span className="text-xs text-slate-500 font-semibold block">Habilidades</span>
             <span className="text-2xl font-black text-slate-900 mt-1 block flex items-center gap-1.5">
-              <Code className="w-5 h-5 text-purple-600" />
+              <Code className="w-5 h-5 text-purple-500" />
               {skills.length}
             </span>
           </div>
           <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
             <span className="text-xs text-slate-500 font-semibold block">Certificações</span>
             <span className="text-2xl font-black text-slate-900 mt-1 block flex items-center gap-1.5">
-              <Award className="w-5 h-5 text-amber-600" />
+              <Award className="w-5 h-5 text-amber-500" />
               {certifications.length}
             </span>
           </div>
-          <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm col-span-2 md:col-span-4 lg:col-span-1">
+          <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
             <span className="text-xs text-slate-500 font-semibold block">Anos de Experiência</span>
-            <span className="text-2xl font-black text-slate-900 mt-1 block">
+            <span className="text-2xl font-black text-slate-900 mt-1 block flex items-center gap-1.5">
+              <Sparkles className="w-5 h-5 text-blue-400" />
               {personalInfo.experienceYears} Anos
             </span>
           </div>
@@ -432,23 +514,6 @@ export default function AdminPanel({
             >
               <Award className="w-4 h-4" />
               Certificações ({certifications.length})
-            </button>
-
-            <button
-              onClick={() => { setActiveTab('mensagens'); setEditingExp(null); setEditingSkill(null); setEditingEdu(null); setEditingCert(null); }}
-              className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-between transition-all ${
-                activeTab === 'mensagens' 
-                  ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/10' 
-                  : 'text-slate-650 hover:bg-slate-100'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <MessageSquare className="w-4 h-4" />
-                Mensagens / Propostas
-              </div>
-              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${activeTab === 'mensagens' ? 'bg-white text-blue-600' : 'bg-slate-100 text-slate-600'}`}>
-                {savedMessages.length}
-              </span>
             </button>
 
             <button
@@ -1286,52 +1351,6 @@ export default function AdminPanel({
                       </button>
                     </div>
                   </form>
-                )}
-              </div>
-            )}
-
-            {/* TAB 6: MENSAGENS / PROPOSTAS RECEBIDAS */}
-            {activeTab === 'mensagens' && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
-                    <MessageSquare className="w-5 h-5 text-blue-600" />
-                    Mensagens & Propostas Recebidas ({savedMessages.length})
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                    Aqui você pode visualizar todas as propostas enviadas pelo formulário de contato do site. Esses dados ficam guardados de forma segura no seu armazenamento local.
-                  </p>
-                </div>
-
-                {savedMessages.length === 0 ? (
-                  <div className="border-2 border-dashed border-slate-200 p-8 text-center rounded-2xl text-slate-400">
-                    <MessageSquare className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                    <span className="text-xs font-bold block">Nenhuma proposta encontrada</span>
-                    <span className="text-[11px] block mt-0.5">As propostas de recrutadores vão aparecer aqui assim que preencherem o formulário.</span>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {savedMessages.map((msg) => (
-                      <div key={msg.id} className="border border-slate-200 p-4 rounded-xl relative group hover:border-slate-300 transition-all bg-slate-50/10">
-                        <div className="flex justify-between items-start gap-4 pb-2 border-b border-slate-100">
-                          <div>
-                            <span className="font-extrabold text-slate-900 text-sm block">{msg.sender}</span>
-                            {msg.company && <span className="text-xs text-blue-600 block font-bold uppercase mt-0.5">{msg.company}</span>}
-                            <span className="text-[10px] text-slate-450 block mt-1">E-mail: <a href={`mailto:${msg.email}`} className="text-blue-600 hover:underline">{msg.email}</a> • {msg.timestamp}</span>
-                          </div>
-                          
-                          <button
-                            onClick={() => handleDeleteMessage(msg.id)}
-                            className="text-slate-400 hover:text-red-650 p-1.5 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
-                            title="Deletar mensagem"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                        <p className="text-xs text-slate-700 mt-3 whitespace-pre-wrap leading-relaxed bg-white p-3 rounded-lg border border-slate-150/70">{msg.message}</p>
-                      </div>
-                    ))}
-                  </div>
                 )}
               </div>
             )}

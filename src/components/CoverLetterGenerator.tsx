@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sparkles, Copy, Check, FileText, Send, Building } from 'lucide-react';
 import { PersonalInfo } from '../types';
 
@@ -9,7 +9,7 @@ interface CoverLetterGeneratorProps {
 export default function CoverLetterGenerator({ personalInfo }: CoverLetterGeneratorProps) {
   const [companyName, setCompanyName] = useState('');
   const [roleName, setRoleName] = useState('Analista de Suporte de TI');
-  const [focusArea, setFocusArea] = useState('suporte_redes');
+  const [focusArea, setFocusArea] = useState('general_curriculo');
   const [generatedLetter, setGeneratedLetter] = useState('');
   const [copied, setCopied] = useState(false);
 
@@ -23,11 +23,32 @@ export default function CoverLetterGenerator({ personalInfo }: CoverLetterGenera
       bodyText = `Com mais de 4 anos de experiência na área de tecnologia, sendo grande parte desse tempo dedicado ao suporte N1/N2 e à infraestrutura de redes na LINKCE TELECOM, desenvolvi um perfil altamente técnico e resolutivo. Tenho sólida vivência em roteamento TCP/IP, configurações de switches, gerenciamento de chamados sob padrões de service desk, e atendimento qualificado ao usuário final.`;
     } else if (focusArea === 'redes_infra') {
       bodyText = `Ao longo da minha trajetória, especializei-me no diagnóstico físico e lógico de ativos de rede. Minhas certificações como Ubiquiti Enterprise Wireless Admin (UEWA) e capacitações em infraestrutura de Fibra Óptica FTTH me qualificam para projetar, instalar e gerenciar redes Wi-Fi e cabeamento estruturado com alto nível de imunidade a ruídos e máxima performance corporativa.`;
+    } else if (focusArea === 'admin_ops') {
+      bodyText = `Ao longo da minha carreira, desenvolvi uma forte aptidão para a organização de fluxos operacionais, otimização de rotinas de trabalho e gestão de informações cruciais. Minha sólida familiaridade com ferramentas de escritório (como planilhas inteligentes, relatórios e painéis dinâmicos), aliada à facilidade de aprender novos sistemas e à disciplina no controle de demandas, me capacita a organizar atividades administrativas com foco absoluto em produtividade, conformidade e redução de gargalos na operação.`;
     } else {
       bodyText = `Atualmente cursando Cibersegurança na Uniasselvi, busco sempre alinhar o suporte técnico operacional às melhores práticas de governança de TI (ITIL v4) e diretrizes de conformidade da LGPD. Minha proatividade e foco na resolução de incidentes no primeiro contato (FCR) garantem que a infraestrutura tecnológica trabalhe em plena sintonia com os objetivos de produtividade do negócio.`;
     }
 
-    const template = `Prezada equipe de Recrutamento da ${company},
+    let template = '';
+
+    if (focusArea === 'general_curriculo') {
+      template = `Prezada equipe de Seleção,
+
+Gostaria de manifestar meu forte interesse em fazer parte de sua equipe e contribuir para o crescimento de sua organização. Apresento um currículo amplo e de destaque, com sólido histórico de 5 anos de atuação profissional, englobando as áreas de suporte técnico de TI N1/N2, infraestrutura de redes locais e de telecomunicação, além de excelente aptidão para rotinas operacionais e administrativas.
+
+Acredito que a combinação da minha bagagem prática — incluindo certificações profissionais de destaque como Ubiquiti Enterprise Wireless Admin (UEWA) — com meu compromisso em otimizar fluxos de trabalho e elevar a eficiência operacional me torna um candidato altamente capacitado a gerar valor de forma imediata para o negócio. Minhas experiências anteriores, tanto em ambiente corporativo como no desenvolvimento de soluções e projetos freelancer de redes, comprovam minha flexibilidade de atuação e excelência no diagnóstico rápido de incidentes.
+
+Busco uma oportunidade onde possa empregar minha dedicação, disciplina organizacional e proatividade. Possuo carteira de habilitação (CNH A & B), veículo próprio (motocicleta) e total disponibilidade de horário para início imediato, com possibilidade de atuação presencial (em Fortaleza e região metropolitana), híbrida ou remota.
+
+Estou à inteira disposição para uma entrevista, onde poderei detalhar minhas competências práticas e como meu portfólio de qualificações pode suprir as demandas atuais do seu time.
+
+Agradeço imensamente pela leitura do meu perfil e pela consideração de minha candidatura.
+
+Atenciosamente,
+${personalInfo.fullName}
+${personalInfo.email} | ${personalInfo.phone}`;
+    } else {
+      template = `Prezada equipe de Recrutamento da ${company},
 
 Gostaria de manifestar meu forte interesse na oportunidade para a vaga de ${role}. Acompanho a atuação de mercado da ${company} e acredito que meu perfil proativo, técnico e focado em soluções ágeis de tecnologia esteja em perfeita harmonia com os valores e demandas de sua equipe.
 
@@ -42,10 +63,15 @@ Agradeço a atenção e consideração.
 Atenciosamente,
 ${personalInfo.fullName}
 ${personalInfo.email} | ${personalInfo.phone}`;
+    }
 
     setGeneratedLetter(template);
     setCopied(false);
   };
+
+  useEffect(() => {
+    handleGenerate();
+  }, [companyName, roleName, focusArea]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(generatedLetter);
@@ -106,6 +132,20 @@ ${personalInfo.email} | ${personalInfo.phone}`;
               Foco Técnico do Pitch
             </label>
             <div className="grid grid-cols-1 gap-2">
+              <label className="flex items-start gap-2.5 p-3 rounded-xl bg-blue-50/50 hover:bg-blue-50 border border-blue-200 cursor-pointer transition-colors text-xs text-slate-600">
+                <input
+                  type="radio"
+                  name="focus"
+                  checked={focusArea === 'general_curriculo'}
+                  onChange={() => setFocusArea('general_curriculo')}
+                  className="mt-0.5 text-blue-600 focus:ring-0 cursor-pointer"
+                />
+                <div>
+                  <strong className="text-blue-900 block font-extrabold mb-0.5 text-[13px]">Carta Geral (Destaque & Interesse)</strong>
+                  Sem nome de empresa específico. Destaca currículo vantajoso de 5 anos, CNH, veículo e grande interesse de contratação.
+                </div>
+              </label>
+
               <label className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 hover:bg-slate-100/60 border border-slate-200 cursor-pointer transition-colors text-xs text-slate-600">
                 <input
                   type="radio"
@@ -145,6 +185,20 @@ ${personalInfo.email} | ${personalInfo.phone}`;
                 <div>
                   <strong className="text-slate-900 block font-extrabold mb-0.5 text-[13px]">Foco em Cibersegurança & ITIL</strong>
                   Formação em Cibersegurança, boas práticas ITIL e LGPD.
+                </div>
+              </label>
+
+              <label className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 hover:bg-slate-100/60 border border-slate-200 cursor-pointer transition-colors text-xs text-slate-600">
+                <input
+                  type="radio"
+                  name="focus"
+                  checked={focusArea === 'admin_ops'}
+                  onChange={() => setFocusArea('admin_ops')}
+                  className="mt-0.5 text-blue-600 focus:ring-0 cursor-pointer"
+                />
+                <div>
+                  <strong className="text-slate-900 block font-extrabold mb-0.5 text-[13px]">Cargos Administrativos & Operações</strong>
+                  Organização, ferramentas de escritório, gestão de processos e rotinas administrativas de alto nível.
                 </div>
               </label>
             </div>
