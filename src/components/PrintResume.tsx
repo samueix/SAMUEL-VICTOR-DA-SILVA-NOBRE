@@ -1,5 +1,5 @@
-import React from 'react';
-import { Printer, Mail, Phone, MapPin, Linkedin, Calendar, Award, GraduationCap, ArrowLeft } from 'lucide-react';
+import React, { useState } from 'react';
+import { Printer, Mail, Phone, MapPin, Linkedin, Calendar, Award, GraduationCap, ArrowLeft, Camera } from 'lucide-react';
 import { PersonalInfo, Experience, Skill, Certification, Education, Project } from '../types';
 
 interface PrintResumeProps {
@@ -10,6 +10,8 @@ interface PrintResumeProps {
   certifications: Certification[];
   educations: Education[];
   projects: Project[];
+  showPhoto?: boolean;
+  isFromAdmin?: boolean;
 }
 
 export default function PrintResume({ 
@@ -19,8 +21,12 @@ export default function PrintResume({
   skills, 
   certifications, 
   educations,
-  projects
+  projects,
+  showPhoto = false,
+  isFromAdmin = false
 }: PrintResumeProps) {
+  const [localShowPhoto, setLocalShowPhoto] = useState(showPhoto);
+
   const handlePrint = () => {
     window.print();
   };
@@ -32,7 +38,7 @@ export default function PrintResume({
         @media print {
           @page {
             size: A4 portrait;
-            margin: 15mm 15mm 15mm 15mm !important; /* Native page margin, hides default headers/footers */
+            margin: 14mm 14mm 14mm 14mm !important; /* Native page margin, hides default headers/footers */
           }
           body {
             background-color: white !important;
@@ -41,6 +47,11 @@ export default function PrintResume({
             margin: 0 !important;
             min-height: 0 !important;
             height: auto !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          img {
+            max-width: 100% !important;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
           }
@@ -56,22 +67,48 @@ export default function PrintResume({
       `}} />
       
       {/* Header tools for web view */}
-      <div className="no-print max-w-4xl mx-auto mb-6 bg-white border border-slate-200 p-4 rounded-xl flex items-center justify-between shadow-sm">
-        <button
-          onClick={onBackClick}
-          className="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 rounded-lg text-sm font-semibold flex items-center gap-1.5 border border-slate-200 shadow-sm transition-colors cursor-pointer"
-        >
-          <ArrowLeft className="w-4 h-4 text-slate-500" />
-          Voltar para o Site
-        </button>
+      <div className="no-print max-w-4xl mx-auto mb-6 bg-white border border-slate-200 p-4 rounded-xl flex flex-wrap items-center justify-between gap-3 shadow-sm">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <button
+            onClick={onBackClick}
+            className="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 rounded-lg text-sm font-semibold flex items-center gap-1.5 border border-slate-200 shadow-sm transition-colors cursor-pointer"
+          >
+            <ArrowLeft className="w-4 h-4 text-slate-500" />
+            {isFromAdmin ? 'Voltar para o Painel ADM' : 'Voltar para o Site'}
+          </button>
 
-        <button
-          onClick={handlePrint}
-          className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold flex items-center gap-2 shadow-md shadow-blue-600/15 transition-colors cursor-pointer"
-        >
-          <Printer className="w-4 h-4" />
-          Imprimir / Salvar PDF
-        </button>
+          {isFromAdmin && (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold rounded-lg shadow-sm">
+              <Camera className="w-3.5 h-3.5 text-emerald-600" />
+              Versão com Foto Oficial (Exclusivo ADM)
+            </span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2">
+          {isFromAdmin && (
+            <button
+              onClick={() => setLocalShowPhoto(!localShowPhoto)}
+              className={`px-3 py-2 rounded-lg text-xs font-bold border transition-colors flex items-center gap-1.5 cursor-pointer ${
+                localShowPhoto 
+                  ? 'bg-blue-50 text-blue-700 border-blue-200' 
+                  : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+              }`}
+              title="Alternar inclusão da foto"
+            >
+              <Camera className="w-3.5 h-3.5" />
+              {localShowPhoto ? 'Foto Ativada' : 'Sem Foto'}
+            </button>
+          )}
+
+          <button
+            onClick={handlePrint}
+            className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold flex items-center gap-2 shadow-md shadow-blue-600/15 transition-colors cursor-pointer"
+          >
+            <Printer className="w-4 h-4" />
+            Imprimir / Salvar PDF {localShowPhoto ? 'com Foto' : ''}
+          </button>
+        </div>
       </div>
 
       {/* Alert notice if running inside an iframe */}
@@ -102,35 +139,55 @@ export default function PrintResume({
       <div className="max-w-4xl mx-auto border border-slate-200 shadow-lg p-8 sm:p-12 rounded-lg bg-white relative print:border-0 print:shadow-none print:p-0">
         
         {/* Top Header */}
-        <div className="border-b-2 border-slate-800 pb-5 text-center">
-          <h1 className="text-3xl font-extrabold tracking-tight uppercase text-slate-900">
-            {personalInfo.fullName}
-          </h1>
-          <p className="text-lg font-bold text-blue-600 mt-1">
-            {personalInfo.title}
-          </p>
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-0.5">
-            {personalInfo.subtitle}
-          </p>
-          
-          {/* Quick Contacts */}
-          <div className="flex flex-wrap justify-center gap-y-2 gap-x-6 mt-4 text-xs font-medium text-slate-600">
-            <span className="flex items-center gap-1.5">
-              <Mail className="w-3.5 h-3.5 text-blue-600" />
-              {personalInfo.email}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Phone className="w-3.5 h-3.5 text-blue-600" />
-              {personalInfo.phone}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-blue-600" />
-              {personalInfo.location}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Linkedin className="w-3.5 h-3.5 text-blue-600" />
-              {personalInfo.linkedinUrl ? personalInfo.linkedinUrl.replace(/(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '') : 'linkedin.com'}
-            </span>
+        <div className={`border-b-2 border-slate-800 pb-5 ${
+          localShowPhoto 
+            ? 'flex flex-col sm:flex-row items-center sm:items-center gap-5 sm:gap-6 text-center sm:text-left print:flex print:flex-row print:items-center print:gap-6 print:text-left' 
+            : 'text-center'
+        }`}>
+          {localShowPhoto && (
+            <div className="shrink-0 flex justify-center print:shrink-0">
+              <div className="w-24 h-24 sm:w-26 sm:h-26 rounded-2xl overflow-hidden border-2 border-slate-800 shadow-sm bg-slate-950 print:w-24 print:h-24 print:rounded-xl">
+                <img 
+                  src={personalInfo.imageUrl || "/foto_perfil/samuel.png"} 
+                  alt={personalInfo.fullName}
+                  className="w-full h-full object-cover object-top"
+                />
+              </div>
+            </div>
+          )}
+
+          <div className={localShowPhoto ? 'flex-1 min-w-0 print:flex-1' : ''}>
+            <h1 className="text-3xl font-extrabold tracking-tight uppercase text-slate-900">
+              {personalInfo.fullName}
+            </h1>
+            <p className="text-lg font-bold text-blue-600 mt-1">
+              {personalInfo.title}
+            </p>
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-0.5">
+              {personalInfo.subtitle}
+            </p>
+            
+            {/* Quick Contacts */}
+            <div className={`flex flex-wrap gap-y-2 gap-x-6 mt-4 text-xs font-medium text-slate-600 ${
+              localShowPhoto ? 'justify-center sm:justify-start print:justify-start' : 'justify-center'
+            }`}>
+              <span className="flex items-center gap-1.5">
+                <Mail className="w-3.5 h-3.5 text-blue-600" />
+                {personalInfo.email}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Phone className="w-3.5 h-3.5 text-blue-600" />
+                {personalInfo.phone}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5 text-blue-600" />
+                {personalInfo.location}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Linkedin className="w-3.5 h-3.5 text-blue-600" />
+                {personalInfo.linkedinUrl ? personalInfo.linkedinUrl.replace(/(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '') : 'linkedin.com'}
+              </span>
+            </div>
           </div>
         </div>
 

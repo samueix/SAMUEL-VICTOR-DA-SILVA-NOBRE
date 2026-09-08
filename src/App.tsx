@@ -217,6 +217,9 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const [printWithPhoto, setPrintWithPhoto] = useState(false);
+  const [printFromAdmin, setPrintFromAdmin] = useState(false);
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -225,6 +228,18 @@ export default function App() {
   };
 
   const handleDownloadPdf = () => {
+    setPrintWithPhoto(false);
+    setPrintFromAdmin(false);
+    setIsPrintMode(true);
+    setTimeout(() => {
+      window.print();
+    }, 300);
+  };
+
+  const handleDownloadPdfWithPhotoFromAdmin = () => {
+    setPrintWithPhoto(true);
+    setPrintFromAdmin(true);
+    setIsAdminMode(false);
     setIsPrintMode(true);
     setTimeout(() => {
       window.print();
@@ -247,6 +262,7 @@ export default function App() {
         savedMessages={savedMessages}
         setSavedMessages={setSavedMessages}
         onClose={() => setIsAdminMode(false)}
+        onDownloadWithPhoto={handleDownloadPdfWithPhotoFromAdmin}
       />
     );
   }
@@ -254,13 +270,22 @@ export default function App() {
   if (isPrintMode) {
     return (
       <PrintResume 
-        onBackClick={() => setIsPrintMode(false)} 
+        onBackClick={() => {
+          setIsPrintMode(false);
+          if (printFromAdmin) {
+            setIsAdminMode(true);
+            setPrintFromAdmin(false);
+          }
+          setPrintWithPhoto(false);
+        }} 
         personalInfo={personalInfo}
         experiences={experiences}
         skills={skills}
         certifications={certifications}
         educations={educations}
         projects={projects}
+        showPhoto={printWithPhoto}
+        isFromAdmin={printFromAdmin}
       />
     );
   }
@@ -277,7 +302,13 @@ export default function App() {
         activeSection={activeSection} 
         setActiveSection={setActiveSection}
         isPrintMode={isPrintMode}
-        setIsPrintMode={setIsPrintMode}
+        setIsPrintMode={(mode) => {
+          if (mode) {
+            setPrintWithPhoto(false);
+            setPrintFromAdmin(false);
+          }
+          setIsPrintMode(mode);
+        }}
         onAdminClick={() => setIsAdminMode(true)}
       />
 

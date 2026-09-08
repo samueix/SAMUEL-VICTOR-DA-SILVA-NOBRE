@@ -17,7 +17,10 @@ import {
   Eye,
   Info,
   Sparkles,
-  FileText
+  FileText,
+  Camera,
+  Printer,
+  Download
 } from 'lucide-react';
 import { PersonalInfo, Experience, Skill, Certification, Education, Message } from '../types';
 import CoverLetterGenerator from './CoverLetterGenerator';
@@ -36,6 +39,7 @@ interface AdminPanelProps {
   savedMessages: Message[];
   setSavedMessages: React.Dispatch<React.SetStateAction<Message[]>>;
   onClose: () => void;
+  onDownloadWithPhoto?: () => void;
 }
 
 export default function AdminPanel({
@@ -51,12 +55,13 @@ export default function AdminPanel({
   setCertifications,
   savedMessages,
   setSavedMessages,
-  onClose
+  onClose,
+  onDownloadWithPhoto
 }: AdminPanelProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState(false);
-  const [activeTab, setActiveTab] = useState<'dados' | 'experiencias' | 'habilidades' | 'educacao' | 'certificacoes' | 'cartas'>('dados');
+  const [activeTab, setActiveTab] = useState<'dados' | 'experiencias' | 'habilidades' | 'educacao' | 'certificacoes' | 'cartas' | 'curriculo_foto'>('dados');
   
   // States for sub-form editors
   const [editingExp, setEditingExp] = useState<Experience | null>(null);
@@ -405,13 +410,27 @@ export default function AdminPanel({
             </div>
           </div>
           
-          <button
-            onClick={onClose}
-            className="px-4 py-1.5 bg-slate-800 hover:bg-slate-750 text-slate-200 hover:text-white rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer border border-slate-700"
-          >
-            <Eye className="w-3.5 h-3.5" />
-            Visualizar Currículo Final
-          </button>
+          <div className="flex flex-wrap items-center gap-2.5">
+            {onDownloadWithPhoto && (
+              <button
+                onClick={onDownloadWithPhoto}
+                className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all shadow-md shadow-emerald-600/20 active:scale-95 cursor-pointer"
+                title="Baixar ou Imprimir o Currículo em PDF com sua foto oficial"
+              >
+                <Camera className="w-3.5 h-3.5" />
+                <Printer className="w-3.5 h-3.5" />
+                Baixar Currículo com Foto (PDF)
+              </button>
+            )}
+
+            <button
+              onClick={onClose}
+              className="px-4 py-1.5 bg-slate-800 hover:bg-slate-750 text-slate-200 hover:text-white rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer border border-slate-700"
+            >
+              <Eye className="w-3.5 h-3.5" />
+              Visualizar Currículo Final
+            </button>
+          </div>
         </div>
       </div>
 
@@ -527,6 +546,30 @@ export default function AdminPanel({
               <Sparkles className="w-4 h-4" />
               Gerador de Cartas
             </button>
+
+            <div className="pt-2 border-t border-slate-100 mt-2">
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 px-3 pb-1 block">
+                Exclusivo ADM
+              </span>
+              <button
+                onClick={() => { setActiveTab('curriculo_foto'); setEditingExp(null); setEditingSkill(null); setEditingEdu(null); setEditingCert(null); }}
+                className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-between transition-all ${
+                  activeTab === 'curriculo_foto' 
+                    ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/10' 
+                    : 'text-slate-700 hover:bg-emerald-50 hover:text-emerald-900'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Camera className={`w-4 h-4 ${activeTab === 'curriculo_foto' ? 'text-white' : 'text-emerald-600'}`} />
+                  <span>Currículo com Foto</span>
+                </div>
+                <span className={`text-[10px] font-extrabold px-1.5 py-0.5 rounded ${
+                  activeTab === 'curriculo_foto' ? 'bg-white/20 text-white' : 'bg-emerald-100 text-emerald-800'
+                }`}>
+                  PDF
+                </span>
+              </button>
+            </div>
           </div>
 
           {/* Editor Area */}
@@ -691,6 +734,38 @@ export default function AdminPanel({
                   <span className="text-[10px] text-slate-500 block mt-1 leading-relaxed">
                     💡 Você pode colar um link de imagem do LinkedIn, Imgur ou qualquer servidor web. Se vazio, o currículo tentará carregar <code className="bg-slate-100 px-1 py-0.5 rounded">/IMG/SAMUEL.png</code>.
                   </span>
+                </div>
+
+                {/* Callout to download resume with this photo */}
+                <div className="bg-emerald-50/80 border border-emerald-200/80 p-4 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl overflow-hidden border border-emerald-300 bg-slate-950 shrink-0">
+                      <img 
+                        src={personalInfo.imageUrl || "/foto_perfil/samuel.png"} 
+                        alt={personalInfo.fullName}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
+                        <Camera className="w-3.5 h-3.5 text-emerald-600" />
+                        Baixar Currículo com esta Foto Oficial
+                      </h4>
+                      <p className="text-[11px] text-emerald-800 mt-0.5">
+                        Exclusivo do Painel ADM. Gera o PDF A4 completo com sua foto no cabeçalho.
+                      </p>
+                    </div>
+                  </div>
+                  {onDownloadWithPhoto && (
+                    <button
+                      type="button"
+                      onClick={onDownloadWithPhoto}
+                      className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer whitespace-nowrap active:scale-95"
+                    >
+                      <Printer className="w-3.5 h-3.5" />
+                      Baixar CV com Foto (PDF)
+                    </button>
+                  )}
                 </div>
 
                 <div className="space-y-1.5">
@@ -1370,6 +1445,122 @@ export default function AdminPanel({
 
                 <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
                   <CoverLetterGenerator personalInfo={personalInfo} />
+                </div>
+              </div>
+            )}
+
+            {/* TAB 8: CURRICULO COM FOTO (EXCLUSIVO ADM) */}
+            {activeTab === 'curriculo_foto' && (
+              <div className="space-y-6">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-extrabold rounded-full mb-2">
+                    <Camera className="w-3.5 h-3.5 text-emerald-600" />
+                    Exclusivo do Painel Administrativo
+                  </div>
+                  <h3 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+                    <Printer className="w-5 h-5 text-emerald-600" />
+                    Baixar Currículo Profissional com Foto (PDF)
+                  </h3>
+                  <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                    Gere e imprima ou salve em PDF o seu currículo oficial contendo sua foto de perfil integrada no topo. Na aba pública, o currículo permanece sem foto, preservando seu padrão discreto para recrutadores gerais.
+                  </p>
+                </div>
+
+                {/* Main Action & Preview Card */}
+                <div className="bg-gradient-to-br from-slate-900 via-slate-850 to-slate-950 text-white rounded-2xl p-6 sm:p-8 border border-slate-800 shadow-xl relative overflow-hidden">
+                  <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                    
+                    {/* Left: Photo & Candidate Info */}
+                    <div className="flex items-center gap-5">
+                      <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-emerald-500 shadow-lg bg-slate-950 shrink-0 ring-4 ring-emerald-500/20">
+                        <img 
+                          src={personalInfo.imageUrl || "/foto_perfil/samuel.png"} 
+                          alt={personalInfo.fullName}
+                          className="w-full h-full object-cover object-top"
+                        />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                            Foto Ativada
+                          </span>
+                          <span className="text-xs font-semibold text-slate-400">
+                            Formato A4 Portrait
+                          </span>
+                        </div>
+                        <h4 className="text-lg sm:text-xl font-black text-white mt-1 uppercase tracking-tight">
+                          {personalInfo.fullName}
+                        </h4>
+                        <p className="text-sm font-bold text-blue-400">
+                          {personalInfo.title}
+                        </p>
+                        <p className="text-xs text-slate-400 mt-0.5">
+                          {personalInfo.email} • {personalInfo.phone}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Right: Primary Action Button */}
+                    <div className="w-full md:w-auto shrink-0">
+                      {onDownloadWithPhoto && (
+                        <button
+                          type="button"
+                          onClick={onDownloadWithPhoto}
+                          className="w-full md:w-auto px-6 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition-all hover:scale-102 active:scale-98 cursor-pointer"
+                        >
+                          <Printer className="w-4 h-4 text-slate-950" />
+                          <Download className="w-4 h-4 text-slate-950" />
+                          Imprimir / Salvar PDF com Foto
+                        </button>
+                      )}
+                    </div>
+
+                  </div>
+
+                  {/* Feature Highlights */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-6 border-t border-slate-800 text-xs text-slate-300">
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-400 font-bold">✓</span>
+                      <span>Foto 3x4 integrada</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-400 font-bold">✓</span>
+                      <span>Margens A4 calibradas</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-400 font-bold">✓</span>
+                      <span>Alta resolução gráfica</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-400 font-bold">✓</span>
+                      <span>Sem propagandas/rodapés</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Instructions on how to save as PDF */}
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 sm:p-6 space-y-3">
+                  <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                    <Info className="w-4 h-4 text-blue-600" />
+                    Como Salvar o PDF no seu Navegador
+                  </h4>
+                  <ol className="list-decimal list-inside text-xs text-slate-600 space-y-2 leading-relaxed">
+                    <li>
+                      Clique no botão verde acima <strong>"Imprimir / Salvar PDF com Foto"</strong>.
+                    </li>
+                    <li>
+                      A tela de impressão será aberta. No campo <strong>Destino</strong> (ou <strong>Impressora</strong>), escolha a opção <strong>"Salvar como PDF"</strong> (Save as PDF).
+                    </li>
+                    <li>
+                      Certifique-se de que o tamanho do papel esteja selecionado como <strong>A4</strong> e a orientação como <strong>Retrato</strong>.
+                    </li>
+                    <li>
+                      Em "Mais definições", ative <strong>"Gráficos de segundo plano"</strong> para que todas as linhas, ícones e cores saiam perfeitos.
+                    </li>
+                    <li>
+                      Clique em <strong>Salvar</strong> e escolha onde guardar o arquivo no seu computador ou celular!
+                    </li>
+                  </ol>
                 </div>
               </div>
             )}
