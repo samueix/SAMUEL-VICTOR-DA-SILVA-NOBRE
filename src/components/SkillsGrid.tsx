@@ -13,7 +13,7 @@ export default function SkillsGrid({ skills }: SkillsGridProps) {
     { id: 'all', label: 'Todas', icon: null },
     { id: 'suporte', label: 'Suporte & Infraestrutura', icon: Headset, color: 'text-blue-400 bg-blue-950/40 border-blue-900/50' },
     { id: 'redes', label: 'Redes & Telecom', icon: Network, color: 'text-emerald-400 bg-emerald-950/40 border-emerald-900/50' },
-    { id: 'desenvolvimento', label: 'Desenvolvimento & Automação', icon: Code, color: 'text-purple-400 bg-purple-950/40 border-purple-900/50' },
+    { id: 'desenvolvimento', label: 'Vibe Coding & Automação', icon: Code, color: 'text-purple-400 bg-purple-950/40 border-purple-900/50' },
     { id: 'ia', label: 'Inteligência Artificial', icon: Sparkles, color: 'text-cyan-400 bg-cyan-950/40 border-cyan-900/50' },
     { id: 'soft', label: 'Habilidades Pessoais', icon: Users, color: 'text-amber-400 bg-amber-950/40 border-amber-900/50' }
   ];
@@ -36,7 +36,7 @@ export default function SkillsGrid({ skills }: SkillsGridProps) {
     switch (cat) {
       case 'suporte': return 'Suporte & Infraestrutura';
       case 'redes': return 'Redes & Telecom';
-      case 'desenvolvimento': return 'Desenvolvimento & Automação';
+      case 'desenvolvimento': return 'Vibe Coding & Automação';
       case 'ia': return 'Inteligência Artificial';
       default: return 'Habilidades Pessoais';
     }
@@ -94,17 +94,16 @@ export default function SkillsGrid({ skills }: SkillsGridProps) {
                 </div>
               </div>
 
-              {/* Progress and Level */}
-              <div className="space-y-2 mt-auto">
-                <div className="flex justify-between text-xs">
+              {/* Progress and Visual Color Indicator (Sem porcentagens numéricas) */}
+              <div className="space-y-2 mt-auto pt-2">
+                <div className="flex items-center justify-between text-xs">
                   <span className={`font-bold ${theme.text} uppercase tracking-wider text-[10px]`}>
                     {getCategoryLabel(skill.category)}
                   </span>
-                  <span className="font-mono text-slate-400 font-bold">{skill.level}%</span>
                 </div>
                 
-                {/* Visual Bar */}
-                <div className={`h-2 w-full ${theme.bg} rounded-full overflow-hidden`}>
+                {/* Visual Bar - Apenas a cor */}
+                <div className={`h-2.5 w-full ${theme.bg} rounded-full overflow-hidden p-0.5 border border-slate-800/60`}>
                   <div 
                     className={`h-full ${theme.bar} rounded-full transition-all duration-1000 ease-out`}
                     style={{ width: `${skill.level}%` }}

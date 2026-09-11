@@ -93,49 +93,49 @@ export const experiences: Experience[] = [
 
 export const skills: Skill[] = [
   // 1. Suporte & Infraestrutura
-  { name: 'Suporte Técnico N1/N2', level: 95, category: 'suporte' },
-  { name: 'Service Desk', level: 92, category: 'suporte' },
-  { name: 'Active Directory', level: 85, category: 'suporte' },
-  { name: 'Microsoft Windows', level: 92, category: 'suporte' },
-  { name: 'Atendimento ao Usuário', level: 95, category: 'suporte' },
-  { name: 'Gestão de Chamados (SLA)', level: 90, category: 'suporte' },
-  { name: 'Metodologias ITIL', level: 85, category: 'suporte' },
-  { name: 'Diagnóstico de Incidentes', level: 93, category: 'suporte' },
+  { name: 'Suporte Técnico N1/N2', level: 100, category: 'suporte' },
+  { name: 'Service Desk', level: 100, category: 'suporte' },
+  { name: 'Active Directory (Conhecimento Teórico)', level: 100, category: 'suporte' },
+  { name: 'Microsoft Windows', level: 100, category: 'suporte' },
+  { name: 'Atendimento ao Usuário', level: 100, category: 'suporte' },
+  { name: 'Gestão de Chamados (SLA)', level: 100, category: 'suporte' },
+  { name: 'Metodologias ITIL', level: 100, category: 'suporte' },
+  { name: 'Diagnóstico de Incidentes', level: 100, category: 'suporte' },
   
   // 2. Redes & Telecom
-  { name: 'Redes TCP/IP & Subredes', level: 92, category: 'redes' },
-  { name: 'Protocolos (DNS, DHCP)', level: 90, category: 'redes' },
-  { name: 'Conexões PPPoE / GPON / FTTH', level: 88, category: 'redes' },
-  { name: 'Configuração de OLT & ONU', level: 80, category: 'redes' },
-  { name: 'Switches & Roteadores', level: 85, category: 'redes' },
-  { name: 'Wi-Fi Corporativo & Ubiquiti', level: 85, category: 'redes' },
-  { name: 'Cabeamento Estruturado', level: 87, category: 'redes' },
-  { name: 'Organização de Racks & Fusão', level: 84, category: 'redes' },
+  { name: 'Redes TCP/IP & Subredes', level: 100, category: 'redes' },
+  { name: 'Protocolos (DNS, DHCP)', level: 100, category: 'redes' },
+  { name: 'Conexões PPPoE / GPON / FTTH / XGS', level: 100, category: 'redes' },
+  { name: 'Configuração de OLT & ONU', level: 100, category: 'redes' },
+  { name: 'Switches & Roteadores', level: 100, category: 'redes' },
+  { name: 'Wi-Fi Corporativo & Ubiquiti', level: 100, category: 'redes' },
+  { name: 'Cabeamento Estruturado', level: 100, category: 'redes' },
+  { name: 'Organização de Racks & Fusão', level: 100, category: 'redes' },
 
-  // 3. Desenvolvimento & Automação
-  { name: 'Linguagem Python', level: 82, category: 'desenvolvimento' },
-  { name: 'HTML5, CSS3 & JavaScript', level: 75, category: 'desenvolvimento' },
-  { name: 'Integração de APIs REST', level: 80, category: 'desenvolvimento' },
-  { name: 'Formatos de Dados (JSON)', level: 82, category: 'desenvolvimento' },
-  { name: 'Controle de Versão (Git & GitHub)', level: 80, category: 'desenvolvimento' },
-  { name: 'Automação de Processos', level: 85, category: 'desenvolvimento' },
+  // 3. Vibe Coding & Automação
+  { name: 'Vibe Coding (Desenvolvimento com IA)', level: 100, category: 'desenvolvimento' },
+  { name: 'Scripts Python com IA', level: 100, category: 'desenvolvimento' },
+  { name: 'Automação de Processos com IA', level: 100, category: 'desenvolvimento' },
+  { name: 'Integração de APIs REST via IA', level: 100, category: 'desenvolvimento' },
+  { name: 'Front-end com IA (HTML/CSS/JS)', level: 100, category: 'desenvolvimento' },
+  { name: 'Controle de Versão (Git & GitHub)', level: 100, category: 'desenvolvimento' },
 
   // 4. Inteligência Artificial
-  { name: 'Desenvolvimento Assistido por IA', level: 85, category: 'ia' },
-  { name: 'Engenharia de Prompt para Código', level: 88, category: 'ia' },
-  { name: 'Automação de Fluxos com IA', level: 82, category: 'ia' },
-  { name: 'Prototipação Rápida de Apps', level: 80, category: 'ia' },
-  { name: 'Depuração & Revisão Assistida', level: 84, category: 'ia' },
+  { name: 'Vibe Coding & Prototipação Ágil', level: 100, category: 'ia' },
+  { name: 'Engenharia de Prompt para Código', level: 100, category: 'ia' },
+  { name: 'Ferramentas de IA (ChatGPT, Claude, Gemini)', level: 100, category: 'ia' },
+  { name: 'Automação de Fluxos com IA', level: 100, category: 'ia' },
+  { name: 'Depuração & Revisão de Código com IA', level: 100, category: 'ia' },
 
   // 5. Habilidades Pessoais (Soft Skills)
-  { name: 'Resolução de Problemas', level: 95, category: 'soft' },
-  { name: 'Comunicação Eficiente', level: 94, category: 'soft' },
-  { name: 'Organização & Documentação', level: 92, category: 'soft' },
-  { name: 'Proatividade', level: 95, category: 'soft' },
-  { name: 'Trabalho em Equipe', level: 93, category: 'soft' },
-  { name: 'Adaptabilidade', level: 96, category: 'soft' },
-  { name: 'Pensamento Analítico', level: 92, category: 'soft' },
-  { name: 'Aprendizado Contínuo', level: 95, category: 'soft' }
+  { name: 'Resolução de Problemas', level: 100, category: 'soft' },
+  { name: 'Comunicação Eficiente', level: 100, category: 'soft' },
+  { name: 'Organização & Documentação', level: 100, category: 'soft' },
+  { name: 'Proatividade', level: 100, category: 'soft' },
+  { name: 'Trabalho em Equipe', level: 100, category: 'soft' },
+  { name: 'Adaptabilidade', level: 100, category: 'soft' },
+  { name: 'Pensamento Analítico', level: 100, category: 'soft' },
+  { name: 'Aprendizado Contínuo', level: 100, category: 'soft' }
 ];
 
 export const projects: Project[] = [

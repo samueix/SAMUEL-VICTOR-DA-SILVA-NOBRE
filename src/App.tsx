@@ -10,7 +10,8 @@ import {
   ArrowUp,
   MessageSquare,
   FileText,
-  FolderGit2
+  FolderGit2,
+  Compass
 } from 'lucide-react';
 
 import Header from './components/Header';
@@ -18,6 +19,7 @@ import ProfileCard from './components/ProfileCard';
 import ExperienceTimeline from './components/ExperienceTimeline';
 import SkillsGrid from './components/SkillsGrid';
 import AcademicEducation from './components/AcademicEducation';
+import FutureGoals from './components/FutureGoals';
 import CoverLetterGenerator from './components/CoverLetterGenerator';
 import InteractiveContact from './components/InteractiveContact';
 import PrintResume from './components/PrintResume';
@@ -111,8 +113,12 @@ export default function App() {
         const parsed = JSON.parse(stored);
         const hasOldCategory = parsed.some((s: any) => s.category === 'sistemas');
         const hasIACategory = parsed.some((s: any) => s.category === 'ia');
-        // Reset/migrate if old category exists or IA category is missing
-        if (hasOldCategory || !hasIACategory) {
+        const hasVibeCoding = parsed.some((s: any) => s.name?.toLowerCase().includes('vibe cod'));
+        const hasADTeorico = parsed.some((s: any) => s.name?.includes('Teórico'));
+        const hasXGS = parsed.some((s: any) => s.name?.includes('XGS'));
+        const hasNotAll100 = parsed.some((s: any) => s.level !== 100);
+        // Reset/migrate if old category exists or IA/Vibe Coding/AD Teórico/XGS is missing or not all 100%
+        if (hasOldCategory || !hasIACategory || !hasVibeCoding || !hasADTeorico || !hasXGS || hasNotAll100) {
           localStorage.setItem('skills', JSON.stringify(defaultSkills));
           return defaultSkills;
         }
@@ -197,7 +203,7 @@ export default function App() {
       setShowScrollTop(window.scrollY > 400);
 
       // Simple active section highlights based on scroll position
-      const sections = ['inicio', 'sobre', 'experiencia', 'habilidades', 'projetos', 'certificacoes', 'formacao', 'contato'];
+      const sections = ['inicio', 'sobre', 'experiencia', 'habilidades', 'projetos', 'certificacoes', 'formacao', 'objetivos', 'contato'];
       const scrollPosition = window.scrollY + 120;
 
       for (const section of sections) {
@@ -356,7 +362,7 @@ export default function App() {
               Habilidades & Competências
             </h2>
             <p className="text-sm text-slate-400 mt-1">
-              Capacidades técnicas e comportamentais desenvolvidas sob altos padrões operacionais e de governança.
+              Capacidades técnicas em suporte, infraestrutura de redes, vibe coding assistido por inteligência artificial e competências comportamentais.
             </p>
           </div>
 
@@ -398,6 +404,21 @@ export default function App() {
               tools={personalInfo.tools}
             />
           </div>
+        </section>
+
+        {/* Future Goals Section */}
+        <section id="objetivos" className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+          <div className="border-b border-slate-800 pb-4 mb-8">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
+              <Compass className="w-6 h-6 text-blue-400" />
+              Futuros Objetivos
+            </h2>
+            <p className="text-sm text-slate-400 mt-1">
+              Roadmap pessoal de evolução, visão de desenvolvimento contínuo e próximos passos planejados na carreira de tecnologia.
+            </p>
+          </div>
+
+          <FutureGoals />
         </section>
 
         {/* Contact Section */}

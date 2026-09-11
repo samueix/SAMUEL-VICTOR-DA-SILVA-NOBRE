@@ -156,7 +156,7 @@ export default function AdminPanel({
   const startNewSkill = () => {
     setEditingSkill({
       name: '',
-      level: 80,
+      level: 100,
       category: 'suporte'
     });
     setEditingSkillIndex(null);
@@ -1054,7 +1054,7 @@ export default function AdminPanel({
                           <div>
                             <span className="font-extrabold text-slate-900 text-xs block">{skill.name}</span>
                             <span className="text-[10px] text-slate-500 font-bold uppercase mt-0.5 block">
-                              Nível {skill.level}% • {skill.category === 'suporte' ? 'Suporte & Infra.' : skill.category === 'redes' ? 'Redes & Tel.' : skill.category === 'desenvolvimento' ? 'Desenv. & Aut.' : skill.category === 'ia' ? 'Inteligência Art.' : 'Habilidade Pess.'}
+                              Nível {skill.level}% • {skill.category === 'suporte' ? 'Suporte & Infra.' : skill.category === 'redes' ? 'Redes & Tel.' : skill.category === 'desenvolvimento' ? 'Vibe Coding & Aut.' : skill.category === 'ia' ? 'Inteligência Art.' : 'Habilidade Pess.'}
                             </span>
                           </div>
                           
@@ -1113,7 +1113,7 @@ export default function AdminPanel({
                         >
                           <option value="suporte">Suporte & Infraestrutura</option>
                           <option value="redes">Redes & Telecom</option>
-                          <option value="desenvolvimento">Desenvolvimento & Automação</option>
+                          <option value="desenvolvimento">Vibe Coding & Automação</option>
                           <option value="ia">Inteligência Artificial</option>
                           <option value="soft">Habilidade Pessoal</option>
                         </select>

@@ -28,6 +28,7 @@ export default function Header({ activeSection, setActiveSection, isPrintMode, s
     { id: 'habilidades', label: 'Habilidades' },
     { id: 'projetos', label: 'Projetos' },
     { id: 'certificacoes', label: 'Formação' },
+    { id: 'objetivos', label: 'Futuros Objetivos' },
     { id: 'contato', label: 'Contato' },
   ];
 
@@ -88,12 +89,12 @@ export default function Header({ activeSection, setActiveSection, isPrintMode, s
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden md:flex items-center gap-0.5 lg:gap-1">
           {navItems.map((item) => (
             <button
               key={item.id}
               onClick={() => handleNavClick(item.id)}
-              className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 cursor-pointer ${
+              className={`px-2 lg:px-3 py-1.5 lg:py-2 rounded-lg text-xs lg:text-sm font-semibold transition-all duration-200 cursor-pointer whitespace-nowrap ${
                 activeSection === item.id && !isPrintMode
                   ? 'bg-blue-500/10 text-blue-400 border border-blue-500/30'
                   : 'text-slate-400 hover:bg-slate-900 hover:text-white'
@@ -105,7 +106,7 @@ export default function Header({ activeSection, setActiveSection, isPrintMode, s
           
           <button
             onClick={() => setIsPrintMode(!isPrintMode)}
-            className={`ml-4 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-1.5 transition-all duration-200 cursor-pointer ${
+            className={`ml-2 lg:ml-4 px-3 lg:px-4 py-1.5 lg:py-2 rounded-lg text-xs lg:text-sm font-semibold flex items-center gap-1.5 transition-all duration-200 cursor-pointer whitespace-nowrap ${
               isPrintMode
                 ? 'bg-amber-600 text-white shadow-md shadow-amber-600/20 hover:bg-amber-500'
                 : 'bg-slate-900 text-slate-200 hover:bg-slate-800 border border-slate-800 shadow-sm'

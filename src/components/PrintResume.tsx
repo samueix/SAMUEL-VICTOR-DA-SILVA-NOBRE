@@ -319,22 +319,22 @@ export default function PrintResume({
               <div className="space-y-1 text-[11px] text-slate-800">
                 <div className="font-bold text-slate-900 text-[9.5px] uppercase tracking-wide">Suporte & Infraestrutura</div>
                 <div className="mb-2 text-[9.5px] text-slate-600 leading-tight">
-                  Suporte N1/N2, Service Desk, Active Directory, Windows, Atendimento, Gestão de Chamados, ITIL, Diagnóstico.
+                  Suporte N1/N2, Service Desk, Active Directory (Teórico), Windows, Atendimento, Gestão de Chamados, ITIL, Diagnóstico.
                 </div>
 
                 <div className="font-bold text-slate-900 text-[9.5px] uppercase tracking-wide mt-1.5">Redes & Telecom</div>
                 <div className="mb-2 text-[9.5px] text-slate-600 leading-tight">
-                  TCP/IP, DNS, DHCP, PPPoE, GPON, FTTH, OLT, ONU, Switches, Roteadores, Wi-Fi Corporativo, Ubiquiti UniFi, Cabeamento, Racks.
+                  TCP/IP, DNS, DHCP, Conexões PPPoE / GPON / FTTH / XGS, OLT, ONU, Switches, Roteadores, Wi-Fi Corporativo, Ubiquiti UniFi, Cabeamento, Racks.
                 </div>
 
-                <div className="font-bold text-slate-900 text-[9.5px] uppercase tracking-wide mt-1.5">Desenvolvimento & Automação</div>
+                <div className="font-bold text-slate-900 text-[9.5px] uppercase tracking-wide mt-1.5">Vibe Coding & Automação</div>
                 <div className="mb-2 text-[9.5px] text-slate-600 leading-tight">
-                  Python, HTML, CSS, JavaScript, APIs REST, JSON, Git, GitHub, Automação de Processos.
+                  Vibe Coding (Desenvolvimento com IA), Scripts Python via IA, Automação de Processos, APIs REST, Git & GitHub.
                 </div>
 
                 <div className="font-bold text-slate-900 text-[9.5px] uppercase tracking-wide mt-1.5">Inteligência Artificial</div>
                 <div className="text-[9.5px] text-slate-600 leading-tight">
-                  Desenvolvimento Assistido por IA, Engenharia de Prompt, Automação com IA, Prototipação, Revisão/Depuração de Código.
+                  Vibe Coding & Prototipação Ágil, Engenharia de Prompt, Ferramentas de IA (ChatGPT, Claude, Gemini), Automação de Fluxos com IA.
                 </div>
               </div>
             </div>
