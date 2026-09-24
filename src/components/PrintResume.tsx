@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Printer, Mail, Phone, MapPin, Linkedin, Calendar, Award, GraduationCap, ArrowLeft, Camera } from 'lucide-react';
+import { Printer, Mail, Phone, MapPin, Linkedin, Calendar, Award, GraduationCap, ArrowLeft, Camera, Globe, QrCode } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import { PersonalInfo, Experience, Skill, Certification, Education, Project } from '../types';
 
 interface PrintResumeProps {
@@ -26,6 +27,10 @@ export default function PrintResume({
   isFromAdmin = false
 }: PrintResumeProps) {
   const [localShowPhoto, setLocalShowPhoto] = useState(showPhoto);
+  const [localShowQrCode, setLocalShowQrCode] = useState(true);
+
+  const websiteUrl = personalInfo.websiteUrl || 'https://samuel-victor-da-silva-nobre.vercel.app/';
+  const displayWebsite = websiteUrl.replace(/(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '');
 
   const handlePrint = () => {
     window.print();
@@ -86,6 +91,19 @@ export default function PrintResume({
         </div>
 
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => setLocalShowQrCode(!localShowQrCode)}
+            className={`px-3 py-2 rounded-lg text-xs font-bold border transition-colors flex items-center gap-1.5 cursor-pointer ${
+              localShowQrCode 
+                ? 'bg-blue-50 text-blue-700 border-blue-200' 
+                : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+            }`}
+            title="Alternar inclusão do QR Code do Portfólio no currículo"
+          >
+            <QrCode className="w-3.5 h-3.5" />
+            {localShowQrCode ? 'QR Code Ativado' : 'Sem QR Code'}
+          </button>
+
           {isFromAdmin && (
             <button
               onClick={() => setLocalShowPhoto(!localShowPhoto)}
@@ -139,11 +157,7 @@ export default function PrintResume({
       <div className="max-w-4xl mx-auto border border-slate-200 shadow-lg p-8 sm:p-12 rounded-lg bg-white relative print:border-0 print:shadow-none print:p-0">
         
         {/* Top Header */}
-        <div className={`border-b-2 border-slate-800 pb-5 ${
-          localShowPhoto 
-            ? 'flex flex-col sm:flex-row items-center sm:items-center gap-5 sm:gap-6 text-center sm:text-left print:flex print:flex-row print:items-center print:gap-6 print:text-left' 
-            : 'text-center'
-        }`}>
+        <div className="border-b-2 border-slate-800 pb-5 flex flex-col sm:flex-row items-center justify-between gap-5 sm:gap-6 text-center sm:text-left print:flex print:flex-row print:items-center print:justify-between print:gap-4 print:text-left">
           {localShowPhoto && (
             <div className="shrink-0 flex justify-center print:shrink-0">
               <div className="w-24 h-24 sm:w-26 sm:h-26 rounded-2xl overflow-hidden border-2 border-slate-800 shadow-sm bg-slate-950 print:w-24 print:h-24 print:rounded-xl">
@@ -156,7 +170,7 @@ export default function PrintResume({
             </div>
           )}
 
-          <div className={localShowPhoto ? 'flex-1 min-w-0 print:flex-1' : ''}>
+          <div className="flex-1 min-w-0 print:flex-1">
             <h1 className="text-3xl font-extrabold tracking-tight uppercase text-slate-900">
               {personalInfo.fullName}
             </h1>
@@ -168,27 +182,60 @@ export default function PrintResume({
             </p>
             
             {/* Quick Contacts */}
-            <div className={`flex flex-wrap gap-y-2 gap-x-6 mt-4 text-xs font-medium text-slate-600 ${
-              localShowPhoto ? 'justify-center sm:justify-start print:justify-start' : 'justify-center'
-            }`}>
+            <div className="flex flex-wrap gap-y-2 gap-x-5 mt-4 text-xs font-medium text-slate-600 justify-center sm:justify-start print:justify-start">
               <span className="flex items-center gap-1.5">
-                <Mail className="w-3.5 h-3.5 text-blue-600" />
+                <Mail className="w-3.5 h-3.5 text-blue-600 shrink-0" />
                 {personalInfo.email}
               </span>
               <span className="flex items-center gap-1.5">
-                <Phone className="w-3.5 h-3.5 text-blue-600" />
+                <Phone className="w-3.5 h-3.5 text-blue-600 shrink-0" />
                 {personalInfo.phone}
               </span>
               <span className="flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-blue-600" />
+                <MapPin className="w-3.5 h-3.5 text-blue-600 shrink-0" />
                 {personalInfo.location}
               </span>
               <span className="flex items-center gap-1.5">
-                <Linkedin className="w-3.5 h-3.5 text-blue-600" />
+                <Linkedin className="w-3.5 h-3.5 text-blue-600 shrink-0" />
                 {personalInfo.linkedinUrl ? personalInfo.linkedinUrl.replace(/(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '') : 'linkedin.com'}
               </span>
+              <a 
+                href={websiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-blue-700 font-bold hover:underline"
+              >
+                <Globe className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                <span>{displayWebsite}</span>
+              </a>
             </div>
           </div>
+
+          {/* QR Code Header Badge */}
+          {localShowQrCode && (
+            <div className="shrink-0 flex items-center gap-2.5 p-2 bg-slate-50 border border-slate-200 rounded-xl print:bg-white print:border print:border-slate-300 print:rounded-lg print:p-1.5 self-center sm:self-auto">
+              <div className="bg-white p-1 rounded-lg border border-slate-100 shadow-2xs print:border-0 print:p-0">
+                <QRCodeSVG 
+                  value={websiteUrl} 
+                  size={58} 
+                  level="M" 
+                  bgColor="#ffffff"
+                  fgColor="#0f172a"
+                />
+              </div>
+              <div className="text-left leading-tight">
+                <span className="text-[9.5px] uppercase tracking-wider font-extrabold text-blue-600 block">
+                  Portfólio Online
+                </span>
+                <span className="text-[8.5px] text-slate-500 font-medium block mt-0.5">
+                  Aponte a câmera
+                </span>
+                <span className="text-[8px] font-mono font-bold text-slate-700 block mt-1 max-w-[120px] truncate" title={websiteUrl}>
+                  {displayWebsite}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Column Grid */}
@@ -360,6 +407,12 @@ export default function PrintResume({
                 Dados Adicionais
               </h2>
               <div className="space-y-1.5 text-[9.5px] text-slate-600">
+                <p>
+                  <strong className="text-slate-900">Portfólio / Site:</strong>{' '}
+                  <a href={websiteUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 font-semibold hover:underline">
+                    {displayWebsite}
+                  </a>
+                </p>
                 <p>
                   <strong className="text-slate-900">CNH:</strong> {personalInfo.cnh}
                 </p>

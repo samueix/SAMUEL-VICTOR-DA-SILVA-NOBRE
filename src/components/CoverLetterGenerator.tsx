@@ -20,7 +20,7 @@ export default function CoverLetterGenerator({ personalInfo }: CoverLetterGenera
     let bodyText = '';
 
     if (focusArea === 'suporte_redes') {
-      bodyText = `Com mais de 4 anos de experiência na área de tecnologia, sendo grande parte desse tempo dedicado ao suporte N1/N2 e à infraestrutura de redes na LINKCE TELECOM, desenvolvi um perfil altamente técnico e resolutivo. Tenho sólida vivência em roteamento TCP/IP, configurações de switches, gerenciamento de chamados sob padrões de service desk, e atendimento qualificado ao usuário final.`;
+      bodyText = `Com mais de ${personalInfo.experienceYears} anos de sólida experiência na área de tecnologia, sendo grande parte desse tempo dedicado ao suporte N1/N2 e à infraestrutura de redes na LINKCE TELECOM, desenvolvi um perfil altamente técnico e resolutivo. Tenho sólida vivência em roteamento TCP/IP, configurações de switches, gerenciamento de chamados sob padrões de service desk, e atendimento qualificado ao usuário final.`;
     } else if (focusArea === 'redes_infra') {
       bodyText = `Ao longo da minha trajetória, especializei-me no diagnóstico físico e lógico de ativos de rede. Minhas certificações como Ubiquiti Enterprise Wireless Admin (UEWA) e capacitações em infraestrutura de Fibra Óptica FTTH me qualificam para projetar, instalar e gerenciar redes Wi-Fi e cabeamento estruturado com alto nível de imunidade a ruídos e máxima performance corporativa.`;
     } else if (focusArea === 'admin_ops') {
@@ -34,11 +34,11 @@ export default function CoverLetterGenerator({ personalInfo }: CoverLetterGenera
     if (focusArea === 'general_curriculo') {
       template = `Prezada equipe de Seleção,
 
-Gostaria de manifestar meu forte interesse em fazer parte de sua equipe e contribuir para o crescimento de sua organização. Apresento um currículo amplo e de destaque, com sólido histórico de 5 anos de atuação profissional, englobando as áreas de suporte técnico de TI N1/N2, infraestrutura de redes locais e de telecomunicação, além de excelente aptidão para rotinas operacionais e administrativas.
+Gostaria de manifestar meu forte interesse em fazer parte de sua equipe e contribuir para o crescimento de sua organização. Apresento um currículo amplo e de destaque, com sólido histórico de ${personalInfo.experienceYears} anos de atuação profissional, englobando as áreas de suporte técnico de TI N1/N2, infraestrutura de redes locais e de telecomunicação, além de excelente aptidão para rotinas operacionais e administrativas.
 
 Acredito que a combinação da minha bagagem prática — incluindo certificações profissionais de destaque como Ubiquiti Enterprise Wireless Admin (UEWA) — com meu compromisso em otimizar fluxos de trabalho e elevar a eficiência operacional me torna um candidato altamente capacitado a gerar valor de forma imediata para o negócio. Minhas experiências anteriores, tanto em ambiente corporativo como no desenvolvimento de soluções e projetos freelancer de redes, comprovam minha flexibilidade de atuação e excelência no diagnóstico rápido de incidentes.
 
-Busco uma oportunidade onde possa empregar minha dedicação, disciplina organizacional e proatividade. Possuo carteira de habilitação (CNH A & B), veículo próprio (motocicleta) e total disponibilidade de horário para início imediato, com possibilidade de atuação presencial (em Fortaleza e região metropolitana), híbrida ou remota.
+Busco uma oportunidade onde possa empregar minha dedicação, disciplina organizacional e proatividade. Possuo carteira de habilitação (${personalInfo.cnh}), total disponibilidade de horário para início imediato, com possibilidade de atuação presencial (${personalInfo.location}), híbrida ou remota.
 
 Estou à inteira disposição para uma entrevista, onde poderei detalhar minhas competências práticas e como meu portfólio de qualificações pode suprir as demandas atuais do seu time.
 
@@ -56,7 +56,7 @@ ${bodyText}
 
 Acredito que posso contribuir de forma imediata para otimizar os processos de suporte, garantir a estabilidade da infraestrutura e prover uma experiência de atendimento excepcional para os colaboradores e clientes da ${company}.
 
-Estou à total disposição para agendarmos uma entrevista, onde poderei detalhar minhas qualificações práticas e como posso somar ao seu time de TI. Possuo CNH A e B, motocicleta própria e disponibilidade total para atuação.
+Estou à total disposição para agendarmos uma entrevista, onde poderei detalhar minhas qualificações práticas e como posso somar ao seu time de TI. Possuo CNH (${personalInfo.cnh}) e total disponibilidade para atuação (${personalInfo.location}, presencial, híbrido ou remoto).
 
 Agradeço a atenção e consideração.
 

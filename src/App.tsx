@@ -59,7 +59,8 @@ export default function App() {
         const hasOldLinkedin = parsed.linkedinUrl && parsed.linkedinUrl.includes('samuel-nobre-40a220186');
         const hasOldTitle = parsed.title === 'Analista de Operações de TI';
         const hasOldLocation = parsed.location === 'Fortaleza – CE';
-        if (!parsed.languages || !parsed.tools || parsed.bio.includes('dedicado e motivado') || hasOldLinkedin || hasOldTitle || hasOldLocation) {
+        const isMissingWebsite = !parsed.websiteUrl;
+        if (!parsed.languages || !parsed.tools || parsed.bio.includes('dedicado e motivado') || hasOldLinkedin || hasOldTitle || hasOldLocation || isMissingWebsite) {
           const migrated = { 
             ...defaultPersonalInfo, 
             ...parsed, 
@@ -69,12 +70,17 @@ export default function App() {
             languages: defaultPersonalInfo.languages, 
             tools: defaultPersonalInfo.tools, 
             english: defaultPersonalInfo.english,
-            linkedinUrl: defaultPersonalInfo.linkedinUrl
+            linkedinUrl: defaultPersonalInfo.linkedinUrl,
+            websiteUrl: defaultPersonalInfo.websiteUrl || 'https://samuel-victor-da-silva-nobre.vercel.app/'
           };
           localStorage.setItem('personalInfo', JSON.stringify(migrated));
           return migrated;
         }
-        return { ...defaultPersonalInfo, ...parsed };
+        return { 
+          ...defaultPersonalInfo, 
+          ...parsed, 
+          websiteUrl: parsed.websiteUrl || defaultPersonalInfo.websiteUrl || 'https://samuel-victor-da-silva-nobre.vercel.app/' 
+        };
       } catch (e) {
         console.error('Error parsing personalInfo from localStorage:', e);
       }
@@ -203,7 +209,7 @@ export default function App() {
       setShowScrollTop(window.scrollY > 400);
 
       // Simple active section highlights based on scroll position
-      const sections = ['inicio', 'sobre', 'experiencia', 'habilidades', 'projetos', 'certificacoes', 'formacao', 'objetivos', 'contato'];
+      const sections = ['inicio', 'sobre', 'experiencia', 'habilidades', 'projetos', 'certificacoes', 'objetivos', 'contato'];
       const scrollPosition = window.scrollY + 120;
 
       for (const section of sections) {
@@ -334,7 +340,7 @@ export default function App() {
               Resumo Executivo
             </h2>
             <p className="text-slate-300 leading-relaxed text-sm sm:text-base text-justify">
-              Profissional de TI dedicado e motivado com mais de {personalInfo.experienceYears} anos de sólida bagagem em suporte técnico e infraestrutura de redes no setor de telecomunicações, incluindo sólida experiência corporativa N1/N2 na LINKCE TELECOM. Com especialização em configuração e manutenção de equipamentos de rede, diagnóstico de ativos críticos e cabeamento estruturado Cat5e/Cat6. Cursando atualmente Bacharelado/Tecnólogo em Cibersegurança, tem como foco a mitigação proativa de incidentes, segurança da informação e a excelência operacional em ambientes corporativos de alta demanda.
+              {personalInfo.bio}
             </p>
           </div>
         </section>

@@ -18,6 +18,7 @@ export const personalInfo = {
   bio: 'Profissional de Tecnologia da Informação com sólida experiência em suporte técnico N1/N2, redes de computadores e telecomunicações. Atuo no diagnóstico e resolução de incidentes, manutenção de equipamentos críticos, configuração de redes corporativas e automação de processos. Possuo experiência no desenvolvimento de aplicações e ferramentas utilizando Python, integrações com APIs e Inteligência Artificial aplicada ao desenvolvimento como ferramenta de produtividade e auxílio na otimização de fluxos, buscando aumentar a eficiência operacional e a qualidade dos serviços prestados.',
   imageUrl: '/foto_perfil/samuel.png',
   cvPdfUrl: '/curriculo_pdf/curriculo.pdf',
+  websiteUrl: 'https://samuel-victor-da-silva-nobre.vercel.app/',
   languages: [
     'Português – Nativo',
     'Inglês – Técnico (Leitura de documentação técnica, manuais e pesquisa de soluções)'

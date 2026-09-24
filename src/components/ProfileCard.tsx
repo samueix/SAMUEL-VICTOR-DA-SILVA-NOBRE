@@ -45,7 +45,7 @@ export default function ProfileCard({ personalInfo, onDownloadClick }: ProfileCa
         <div className="w-48 h-48 sm:w-56 sm:h-56 rounded-full overflow-hidden border-4 border-slate-950 shadow-2xl flex-shrink-0 relative bg-slate-950">
           {!imageError ? (
             <img 
-              src={personalInfo.imageUrl || "/IMG/SAMUEL.png"} 
+              src={personalInfo.imageUrl || "/foto_perfil/samuel.png"} 
               alt={personalInfo.fullName}
               className="w-full h-full object-cover object-center bg-slate-950 mix-blend-normal"
               onError={() => setImageError(true)}
@@ -122,7 +122,7 @@ export default function ProfileCard({ personalInfo, onDownloadClick }: ProfileCa
           </div>
 
           {/* Interactive Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3.5 mt-8 no-print">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-3.5 mt-8 no-print">
             <a 
               href={getFormattedWhatsappUrl(personalInfo.whatsappUrl)}
               target="_blank"

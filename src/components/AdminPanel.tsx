@@ -20,8 +20,16 @@ import {
   FileText,
   Camera,
   Printer,
-  Download
+  Download,
+  QrCode,
+  Globe,
+  Copy,
+  Check,
+  ExternalLink,
+  Share2,
+  Smartphone
 } from 'lucide-react';
+import { QRCodeCanvas, QRCodeSVG } from 'qrcode.react';
 import { PersonalInfo, Experience, Skill, Certification, Education, Message } from '../types';
 import CoverLetterGenerator from './CoverLetterGenerator';
 
@@ -61,7 +69,8 @@ export default function AdminPanel({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState(false);
-  const [activeTab, setActiveTab] = useState<'dados' | 'experiencias' | 'habilidades' | 'educacao' | 'certificacoes' | 'cartas' | 'curriculo_foto'>('dados');
+  const [activeTab, setActiveTab] = useState<'dados' | 'experiencias' | 'habilidades' | 'educacao' | 'certificacoes' | 'cartas' | 'curriculo_foto' | 'qrcode' | 'mensagens'>('dados');
+  const [copiedLink, setCopiedLink] = useState(false);
   
   // States for sub-form editors
   const [editingExp, setEditingExp] = useState<Experience | null>(null);
@@ -75,6 +84,21 @@ export default function AdminPanel({
   // New item placeholders
   const [newDescBullet, setNewDescBullet] = useState('');
   const [newSkillTag, setNewSkillTag] = useState('');
+
+  const handleDeleteSavedMessage = (id: string) => {
+    if (window.confirm('Deseja realmente excluir esta mensagem?')) {
+      const updated = savedMessages.filter(m => m.id !== id);
+      setSavedMessages(updated);
+      localStorage.setItem('samuel_portfolio_messages', JSON.stringify(updated));
+    }
+  };
+
+  const handleClearAllMessages = () => {
+    if (window.confirm('Tem certeza que deseja apagar todas as mensagens recebidas?')) {
+      setSavedMessages([]);
+      localStorage.setItem('samuel_portfolio_messages', JSON.stringify([]));
+    }
+  };
   
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,6 +114,35 @@ export default function AdminPanel({
     const updated = { ...personalInfo, [field]: value };
     setPersonalInfo(updated);
     localStorage.setItem('personalInfo', JSON.stringify(updated));
+  };
+
+  const handleCopyLink = () => {
+    const url = personalInfo.websiteUrl || 'https://samuel-victor-da-silva-nobre.vercel.app/';
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(url);
+    } else {
+      const textArea = document.createElement('textarea');
+      textArea.value = url;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+    }
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2500);
+  };
+
+  const handleDownloadQrCode = () => {
+    const canvas = document.getElementById('admin-portfolio-qr-canvas') as HTMLCanvasElement;
+    if (canvas) {
+      const pngUrl = canvas.toDataURL('image/png');
+      const downloadLink = document.createElement('a');
+      downloadLink.href = pngUrl;
+      downloadLink.download = 'qrcode-samuel-portfolio.png';
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    }
   };
 
   // EXPERIENCE OPERATIONS
@@ -438,7 +491,7 @@ export default function AdminPanel({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         
         {/* Statistics & Overview Section */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
           <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
             <span className="text-xs text-slate-500 font-semibold block">Experiências</span>
             <span className="text-2xl font-black text-slate-900 mt-1 block flex items-center gap-1.5">
@@ -465,6 +518,13 @@ export default function AdminPanel({
             <span className="text-2xl font-black text-slate-900 mt-1 block flex items-center gap-1.5">
               <Sparkles className="w-5 h-5 text-blue-400" />
               {personalInfo.experienceYears} Anos
+            </span>
+          </div>
+          <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
+            <span className="text-xs text-slate-500 font-semibold block">Mensagens / Propostas</span>
+            <span className="text-2xl font-black text-slate-900 mt-1 block flex items-center gap-1.5">
+              <MessageSquare className="w-5 h-5 text-emerald-500" />
+              {savedMessages.length}
             </span>
           </div>
         </div>
@@ -547,13 +607,34 @@ export default function AdminPanel({
               Gerador de Cartas
             </button>
 
-            <div className="pt-2 border-t border-slate-100 mt-2">
+            <button
+              onClick={() => { setActiveTab('mensagens'); setEditingExp(null); setEditingSkill(null); setEditingEdu(null); setEditingCert(null); }}
+              className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-between transition-all cursor-pointer ${
+                activeTab === 'mensagens' 
+                  ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/10' 
+                  : 'text-slate-650 hover:bg-slate-100'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <MessageSquare className="w-4 h-4" />
+                <span>Mensagens</span>
+              </div>
+              <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
+                activeTab === 'mensagens' 
+                  ? 'bg-white/20 text-white' 
+                  : savedMessages.length > 0 ? 'bg-blue-500/20 text-blue-400' : 'bg-slate-800 text-slate-400'
+              }`}>
+                {savedMessages.length}
+              </span>
+            </button>
+
+            <div className="pt-2 border-t border-slate-100 mt-2 space-y-1">
               <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 px-3 pb-1 block">
                 Exclusivo ADM
               </span>
               <button
                 onClick={() => { setActiveTab('curriculo_foto'); setEditingExp(null); setEditingSkill(null); setEditingEdu(null); setEditingCert(null); }}
-                className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-between transition-all ${
+                className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-between transition-all cursor-pointer ${
                   activeTab === 'curriculo_foto' 
                     ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/10' 
                     : 'text-slate-700 hover:bg-emerald-50 hover:text-emerald-900'
@@ -567,6 +648,25 @@ export default function AdminPanel({
                   activeTab === 'curriculo_foto' ? 'bg-white/20 text-white' : 'bg-emerald-100 text-emerald-800'
                 }`}>
                   PDF
+                </span>
+              </button>
+
+              <button
+                onClick={() => { setActiveTab('qrcode'); setEditingExp(null); setEditingSkill(null); setEditingEdu(null); setEditingCert(null); }}
+                className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-between transition-all cursor-pointer ${
+                  activeTab === 'qrcode' 
+                    ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/10' 
+                    : 'text-slate-700 hover:bg-blue-50 hover:text-blue-900'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <QrCode className={`w-4 h-4 ${activeTab === 'qrcode' ? 'text-white' : 'text-blue-600'}`} />
+                  <span>QR Code do Portfólio</span>
+                </div>
+                <span className={`text-[10px] font-extrabold px-1.5 py-0.5 rounded ${
+                  activeTab === 'qrcode' ? 'bg-white/20 text-white' : 'bg-blue-100 text-blue-800'
+                }`}>
+                  Site
                 </span>
               </button>
             </div>
@@ -718,6 +818,44 @@ export default function AdminPanel({
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                     />
                   </div>
+                </div>
+
+                <div className="space-y-1.5 p-4 rounded-xl bg-blue-50/70 border border-blue-200/80">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                      <Globe className="w-4 h-4 text-blue-600" />
+                      Link Oficial do Site / Portfólio
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('qrcode')}
+                      className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 hover:underline cursor-pointer"
+                    >
+                      <QrCode className="w-3.5 h-3.5" />
+                      Aba QR Code do Site →
+                    </button>
+                  </div>
+                  <div className="flex gap-2">
+                    <input
+                      type="url"
+                      value={personalInfo.websiteUrl || 'https://samuel-victor-da-silva-nobre.vercel.app/'}
+                      onChange={(e) => handleSavePersonalInfo('websiteUrl', e.target.value)}
+                      placeholder="https://samuel-victor-da-silva-nobre.vercel.app/"
+                      className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-blue-600 transition-all font-mono"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleCopyLink}
+                      className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shrink-0 transition-colors cursor-pointer"
+                      title="Copiar link"
+                    >
+                      {copiedLink ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                      {copiedLink ? 'Copiado' : 'Copiar'}
+                    </button>
+                  </div>
+                  <span className="text-[10px] text-slate-500 block leading-relaxed">
+                    🔗 Este link é exibido diretamente no cabeçalho do seu currículo e gera o QR Code escaneável para celulares.
+                  </span>
                 </div>
 
                 <div className="space-y-1.5">
@@ -1562,6 +1700,305 @@ export default function AdminPanel({
                     </li>
                   </ol>
                 </div>
+              </div>
+            )}
+
+            {/* TAB 8: QR CODE & LINK DO SITE */}
+            {activeTab === 'qrcode' && (
+              <div className="space-y-6">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-500 rounded-full text-xs font-semibold uppercase tracking-wider mb-2">
+                    <QrCode className="w-3.5 h-3.5" />
+                    Acesso Mobile & Compartilhamento
+                  </div>
+                  <h3 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+                    QR Code Oficial do Portfólio & Currículo
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                    Escaneie diretamente com a câmera do celular para acessar o site na Vercel ou baixe o QR Code em alta definição para estampar em currículos físicos, cartões e apresentações.
+                  </p>
+                </div>
+
+                {/* Target URL Bar with copy and test link */}
+                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm text-white">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="space-y-1 min-w-0">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+                        Link de Destino Oficial do Portfólio
+                      </span>
+                      <div className="flex items-center gap-2 font-mono text-sm sm:text-base font-bold text-blue-400 break-all">
+                        <Globe className="w-4 h-4 shrink-0 text-blue-400" />
+                        <span className="truncate">{personalInfo.websiteUrl || 'https://samuel-victor-da-silva-nobre.vercel.app/'}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2.5 shrink-0">
+                      <button
+                        type="button"
+                        onClick={handleCopyLink}
+                        className="px-4 py-2.5 bg-slate-800 hover:bg-slate-750 text-white rounded-xl text-xs font-bold flex items-center gap-2 border border-slate-700 transition-all active:scale-95 cursor-pointer shadow-sm"
+                      >
+                        {copiedLink ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                        {copiedLink ? 'Link Copiado!' : 'Copiar Link'}
+                      </button>
+
+                      <a
+                        href={personalInfo.websiteUrl || 'https://samuel-victor-da-silva-nobre.vercel.app/'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold flex items-center gap-2 transition-all active:scale-95 cursor-pointer shadow-md shadow-blue-600/20"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        Abrir Site
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                {/* QR Code Presentation Box */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
+                  
+                  {/* Left: Scannable QR Code Frame */}
+                  <div className="md:col-span-6 bg-slate-950 border border-slate-800 rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center relative overflow-hidden group shadow-lg">
+                    {/* Background Tech Glow */}
+                    <div className="absolute -top-24 -right-24 w-48 h-48 bg-blue-500/15 rounded-full blur-2xl group-hover:bg-blue-500/25 transition-all duration-500 pointer-events-none" />
+                    <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all duration-500 pointer-events-none" />
+                    
+                    {/* White Card holding the crisp QR Code */}
+                    <div className="bg-white p-4 sm:p-5 rounded-2xl shadow-2xl border-4 border-slate-800 relative z-10 transition-transform group-hover:scale-[1.02] duration-300">
+                      <QRCodeSVG
+                        value={personalInfo.websiteUrl || 'https://samuel-victor-da-silva-nobre.vercel.app/'}
+                        size={210}
+                        level="H"
+                        includeMargin={false}
+                        bgColor="#ffffff"
+                        fgColor="#0f172a"
+                      />
+                    </div>
+
+                    {/* Hidden high-res canvas for 1024x1024 export */}
+                    <div className="hidden">
+                      <QRCodeCanvas
+                        id="admin-portfolio-qr-canvas"
+                        value={personalInfo.websiteUrl || 'https://samuel-victor-da-silva-nobre.vercel.app/'}
+                        size={1024}
+                        level="H"
+                        includeMargin={true}
+                        bgColor="#ffffff"
+                        fgColor="#0f172a"
+                      />
+                    </div>
+
+                    <div className="mt-5 relative z-10 space-y-1">
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full text-[11px] font-bold">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        Pronto para Leitura
+                      </div>
+                      <p className="text-xs text-slate-400 pt-1">
+                        Aponte a câmera do seu smartphone para testar
+                      </p>
+                    </div>
+
+                    {/* Download HD Button */}
+                    <button
+                      type="button"
+                      onClick={handleDownloadQrCode}
+                      className="mt-5 w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-md shadow-emerald-600/20 active:scale-95 transition-all cursor-pointer relative z-10"
+                    >
+                      <Download className="w-4 h-4" />
+                      Baixar Imagem do QR Code (PNG HD)
+                    </button>
+                  </div>
+
+                  {/* Right: Settings and Curriculum Integration Card */}
+                  <div className="md:col-span-6 space-y-4 flex flex-col justify-between">
+                    
+                    {/* URL Edit Form */}
+                    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-3">
+                      <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                        <Settings className="w-4 h-4 text-blue-600" />
+                        Alterar / Configurar Link
+                      </h4>
+                      <p className="text-xs text-slate-600 leading-relaxed">
+                        Se você migrar de domínio ou utilizar um link personalizado, altere aqui. O QR Code e o currículo impresso serão atualizados automaticamente.
+                      </p>
+
+                      <div className="space-y-1.5 pt-1">
+                        <label className="text-xs font-bold text-slate-700 block">URL do Portfólio</label>
+                        <input
+                          type="url"
+                          value={personalInfo.websiteUrl || ''}
+                          onChange={(e) => handleSavePersonalInfo('websiteUrl', e.target.value)}
+                          placeholder="https://samuel-victor-da-silva-nobre.vercel.app/"
+                          className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-900 text-sm font-mono focus:outline-none focus:border-blue-600 transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Resume Integration Callout */}
+                    <div className="bg-blue-50/70 border border-blue-200/80 rounded-2xl p-5 space-y-3">
+                      <h4 className="text-sm font-bold text-blue-950 flex items-center gap-2">
+                        <FileText className="w-4 h-4 text-blue-600" />
+                        Como o QR Code aparece no seu Currículo
+                      </h4>
+                      <p className="text-xs text-blue-900 leading-relaxed">
+                        Ao imprimir ou salvar o currículo em PDF, este QR Code é exibido no topo do cabeçalho junto ao link em texto <strong>samuel-victor-da-silva-nobre.vercel.app</strong>.
+                      </p>
+
+                      <div className="flex flex-col sm:flex-row gap-2 pt-1">
+                        <button
+                          type="button"
+                          onClick={onClose}
+                          className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-sm"
+                        >
+                          <Eye className="w-4 h-4" />
+                          Ver Currículo Final
+                        </button>
+                        {onDownloadWithPhoto && (
+                          <button
+                            type="button"
+                            onClick={onDownloadWithPhoto}
+                            className="flex-1 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-sm"
+                          >
+                            <Printer className="w-4 h-4" />
+                            Imprimir com QR Code
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+
+                {/* Practical Tips Grid */}
+                <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 space-y-3">
+                  <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-amber-500" />
+                    Dicas Práticas para Aproveitar seu QR Code
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+                    <div className="p-3.5 bg-slate-50 border border-slate-100 rounded-xl space-y-1.5">
+                      <div className="font-bold text-xs text-slate-900 flex items-center gap-1.5">
+                        <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-[11px] font-extrabold">1</span>
+                        Entrevistas Presenciais
+                      </div>
+                      <p className="text-[11px] text-slate-600 leading-relaxed">
+                        Leve seu currículo impresso com o QR Code. O recrutador pode apontar o celular e navegar instantaneamente nos seus projetos ao vivo.
+                      </p>
+                    </div>
+
+                    <div className="p-3.5 bg-slate-50 border border-slate-100 rounded-xl space-y-1.5">
+                      <div className="font-bold text-xs text-slate-900 flex items-center gap-1.5">
+                        <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[11px] font-extrabold">2</span>
+                        Cartões & Adesivos
+                      </div>
+                      <p className="text-[11px] text-slate-600 leading-relaxed">
+                        Baixe o PNG em alta resolução (1024x1024) para estampar em cartões de visita profissionais, crachás de eventos tech ou adesivos para notebook.
+                      </p>
+                    </div>
+
+                    <div className="p-3.5 bg-slate-50 border border-slate-100 rounded-xl space-y-1.5">
+                      <div className="font-bold text-xs text-slate-900 flex items-center gap-1.5">
+                        <span className="w-5 h-5 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-[11px] font-extrabold">3</span>
+                        LinkedIn & Redes
+                      </div>
+                      <p className="text-[11px] text-slate-600 leading-relaxed">
+                        Compartilhe o link direto em posts e na sua bio para que gerentes de contratação conheçam todas as suas qualificações interativamente.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            )}
+
+            {/* TAB: MENSAGENS RECEBIDAS */}
+            {activeTab === 'mensagens' && (
+              <div className="space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                  <div>
+                    <h3 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                      <MessageSquare className="w-5 h-5 text-blue-600" />
+                      Mensagens Recebidas & Propostas
+                    </h3>
+                    <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                      Gerencie as mensagens e propostas enviadas por recrutadores e visitantes através do site.
+                    </p>
+                  </div>
+                  {savedMessages.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleClearAllMessages}
+                      className="px-3.5 py-2 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer self-start sm:self-auto"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      Limpar Todas ({savedMessages.length})
+                    </button>
+                  )}
+                </div>
+
+                {savedMessages.length === 0 ? (
+                  <div className="text-center py-16 px-4 bg-slate-50 border border-dashed border-slate-200 rounded-2xl">
+                    <div className="w-12 h-12 rounded-full bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center mx-auto mb-3">
+                      <MessageSquare className="w-6 h-6" />
+                    </div>
+                    <h4 className="text-sm font-bold text-slate-900">Nenhuma mensagem recebida ainda</h4>
+                    <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto leading-relaxed">
+                      Quando um recrutador ou visitante enviar uma proposta pelo formulário de contato do site, ela será listada aqui e também aberta diretamente no seu cliente de e-mail.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {savedMessages.map((msg) => (
+                      <div
+                        key={msg.id}
+                        className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs hover:border-slate-300 transition-all space-y-3"
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                          <div>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <h4 className="text-sm font-black text-slate-900">{msg.sender}</h4>
+                              {msg.company && (
+                                <span className="text-[11px] font-bold px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-100 rounded-md">
+                                  {msg.company}
+                                </span>
+                              )}
+                            </div>
+                            <span className="text-xs text-slate-500">{msg.email}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[11px] text-slate-400 font-medium">
+                              {msg.timestamp}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteSavedMessage(msg.id)}
+                              className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer ml-1"
+                              title="Excluir mensagem"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="bg-slate-50 p-3.5 rounded-lg border border-slate-100 text-xs sm:text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">
+                          {msg.message}
+                        </div>
+
+                        <div className="flex justify-end pt-1">
+                          <a
+                            href={`mailto:${msg.email}?subject=${encodeURIComponent(`Re: Contato de ${msg.sender} - Samuel Victor`)}`}
+                            className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" />
+                            Responder por E-mail
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 

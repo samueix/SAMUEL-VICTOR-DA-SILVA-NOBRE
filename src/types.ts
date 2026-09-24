@@ -16,6 +16,7 @@ export interface PersonalInfo {
   bio: string;
   imageUrl?: string;
   cvPdfUrl?: string;
+  websiteUrl?: string;
   languages?: string[];
   tools?: string[];
 }

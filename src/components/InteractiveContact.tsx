@@ -59,7 +59,7 @@ export default function InteractiveContact({ personalInfo, savedMessages, setSav
       `---\nEsta mensagem também foi salva no seu painel administrativo local.`
     );
 
-    window.location.href = `mailto:samuca.victor135@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`;
+    window.location.href = `mailto:${personalInfo.email}?subject=${mailtoSubject}&body=${mailtoBody}`;
 
     // Clear form
     setSenderName('');
@@ -138,6 +138,85 @@ export default function InteractiveContact({ personalInfo, savedMessages, setSav
             </div>
           </a>
         ))}
+      </div>
+
+      {/* Quick Message / Proposal Form */}
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+            <Send className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-white">Enviar Mensagem ou Proposta Direta</h3>
+            <p className="text-xs text-slate-400">Preencha os campos abaixo para enviar uma mensagem diretamente ao e-mail profissional de Samuel.</p>
+          </div>
+        </div>
+
+        {isSuccess && (
+          <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl flex items-center gap-3 text-emerald-400 text-sm">
+            <CheckCircle2 className="w-5 h-5 shrink-0" />
+            <span>Mensagem registrada com sucesso! Seu cliente de e-mail foi aberto para envio imediato.</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label className="text-xs font-semibold text-slate-300 block mb-1.5">Seu Nome *</label>
+              <input
+                type="text"
+                required
+                value={senderName}
+                onChange={(e) => setSenderName(e.target.value)}
+                placeholder="Ex: Carlos Oliveira"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-slate-300 block mb-1.5">Seu E-mail *</label>
+              <input
+                type="email"
+                required
+                value={senderEmail}
+                onChange={(e) => setSenderEmail(e.target.value)}
+                placeholder="Ex: recrutador@empresa.com"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-slate-300 block mb-1.5">Empresa / Organização</label>
+              <input
+                type="text"
+                value={senderCompany}
+                onChange={(e) => setSenderCompany(e.target.value)}
+                placeholder="Ex: Tech Corp"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs font-semibold text-slate-300 block mb-1.5">Mensagem / Proposta *</label>
+            <textarea
+              required
+              rows={4}
+              value={senderMessage}
+              onChange={(e) => setSenderMessage(e.target.value)}
+              placeholder="Descreva a oportunidade de trabalho, detalhes da vaga ou deixe seu recado..."
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 resize-none"
+            />
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-sm flex items-center gap-2 transition-all shadow-md shadow-blue-600/20 active:scale-95 cursor-pointer"
+            >
+              <Send className="w-4 h-4" />
+              Enviar Mensagem
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
