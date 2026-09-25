@@ -69,7 +69,7 @@ export default function AdminPanel({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState(false);
-  const [activeTab, setActiveTab] = useState<'dados' | 'experiencias' | 'habilidades' | 'educacao' | 'certificacoes' | 'cartas' | 'curriculo_foto' | 'qrcode' | 'mensagens'>('dados');
+  const [activeTab, setActiveTab] = useState<'dados' | 'experiencias' | 'habilidades' | 'educacao' | 'certificacoes' | 'cartas' | 'curriculo_foto' | 'qrcode'>('dados');
   const [copiedLink, setCopiedLink] = useState(false);
   
   // States for sub-form editors
@@ -84,21 +84,6 @@ export default function AdminPanel({
   // New item placeholders
   const [newDescBullet, setNewDescBullet] = useState('');
   const [newSkillTag, setNewSkillTag] = useState('');
-
-  const handleDeleteSavedMessage = (id: string) => {
-    if (window.confirm('Deseja realmente excluir esta mensagem?')) {
-      const updated = savedMessages.filter(m => m.id !== id);
-      setSavedMessages(updated);
-      localStorage.setItem('samuel_portfolio_messages', JSON.stringify(updated));
-    }
-  };
-
-  const handleClearAllMessages = () => {
-    if (window.confirm('Tem certeza que deseja apagar todas as mensagens recebidas?')) {
-      setSavedMessages([]);
-      localStorage.setItem('samuel_portfolio_messages', JSON.stringify([]));
-    }
-  };
   
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -491,7 +476,7 @@ export default function AdminPanel({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         
         {/* Statistics & Overview Section */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
             <span className="text-xs text-slate-500 font-semibold block">Experiências</span>
             <span className="text-2xl font-black text-slate-900 mt-1 block flex items-center gap-1.5">
@@ -518,13 +503,6 @@ export default function AdminPanel({
             <span className="text-2xl font-black text-slate-900 mt-1 block flex items-center gap-1.5">
               <Sparkles className="w-5 h-5 text-blue-400" />
               {personalInfo.experienceYears} Anos
-            </span>
-          </div>
-          <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
-            <span className="text-xs text-slate-500 font-semibold block">Mensagens / Propostas</span>
-            <span className="text-2xl font-black text-slate-900 mt-1 block flex items-center gap-1.5">
-              <MessageSquare className="w-5 h-5 text-emerald-500" />
-              {savedMessages.length}
             </span>
           </div>
         </div>
@@ -605,27 +583,6 @@ export default function AdminPanel({
             >
               <Sparkles className="w-4 h-4" />
               Gerador de Cartas
-            </button>
-
-            <button
-              onClick={() => { setActiveTab('mensagens'); setEditingExp(null); setEditingSkill(null); setEditingEdu(null); setEditingCert(null); }}
-              className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-between transition-all cursor-pointer ${
-                activeTab === 'mensagens' 
-                  ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/10' 
-                  : 'text-slate-650 hover:bg-slate-100'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <MessageSquare className="w-4 h-4" />
-                <span>Mensagens</span>
-              </div>
-              <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
-                activeTab === 'mensagens' 
-                  ? 'bg-white/20 text-white' 
-                  : savedMessages.length > 0 ? 'bg-blue-500/20 text-blue-400' : 'bg-slate-800 text-slate-400'
-              }`}>
-                {savedMessages.length}
-              </span>
             </button>
 
             <div className="pt-2 border-t border-slate-100 mt-2 space-y-1">
@@ -1910,95 +1867,6 @@ export default function AdminPanel({
                   </div>
                 </div>
 
-              </div>
-            )}
-
-            {/* TAB: MENSAGENS RECEBIDAS */}
-            {activeTab === 'mensagens' && (
-              <div className="space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
-                  <div>
-                    <h3 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
-                      <MessageSquare className="w-5 h-5 text-blue-600" />
-                      Mensagens Recebidas & Propostas
-                    </h3>
-                    <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                      Gerencie as mensagens e propostas enviadas por recrutadores e visitantes através do site.
-                    </p>
-                  </div>
-                  {savedMessages.length > 0 && (
-                    <button
-                      type="button"
-                      onClick={handleClearAllMessages}
-                      className="px-3.5 py-2 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer self-start sm:self-auto"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      Limpar Todas ({savedMessages.length})
-                    </button>
-                  )}
-                </div>
-
-                {savedMessages.length === 0 ? (
-                  <div className="text-center py-16 px-4 bg-slate-50 border border-dashed border-slate-200 rounded-2xl">
-                    <div className="w-12 h-12 rounded-full bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center mx-auto mb-3">
-                      <MessageSquare className="w-6 h-6" />
-                    </div>
-                    <h4 className="text-sm font-bold text-slate-900">Nenhuma mensagem recebida ainda</h4>
-                    <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto leading-relaxed">
-                      Quando um recrutador ou visitante enviar uma proposta pelo formulário de contato do site, ela será listada aqui e também aberta diretamente no seu cliente de e-mail.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {savedMessages.map((msg) => (
-                      <div
-                        key={msg.id}
-                        className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs hover:border-slate-300 transition-all space-y-3"
-                      >
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
-                          <div>
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <h4 className="text-sm font-black text-slate-900">{msg.sender}</h4>
-                              {msg.company && (
-                                <span className="text-[11px] font-bold px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-100 rounded-md">
-                                  {msg.company}
-                                </span>
-                              )}
-                            </div>
-                            <span className="text-xs text-slate-500">{msg.email}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-[11px] text-slate-400 font-medium">
-                              {msg.timestamp}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteSavedMessage(msg.id)}
-                              className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer ml-1"
-                              title="Excluir mensagem"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </div>
-
-                        <div className="bg-slate-50 p-3.5 rounded-lg border border-slate-100 text-xs sm:text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">
-                          {msg.message}
-                        </div>
-
-                        <div className="flex justify-end pt-1">
-                          <a
-                            href={`mailto:${msg.email}?subject=${encodeURIComponent(`Re: Contato de ${msg.sender} - Samuel Victor`)}`}
-                            className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm"
-                          >
-                            <ExternalLink className="w-3.5 h-3.5" />
-                            Responder por E-mail
-                          </a>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
             )}
 
